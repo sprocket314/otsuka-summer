@@ -259,15 +259,21 @@
   .kml ol{margin:6px 0 0;padding-left:20px;font-size:13.5px}
   .kml code{font-family:"Space Mono",monospace;background:var(--paper);padding:2px 6px;border-radius:5px;font-size:12px}
 
-  /* ---------- add-to-calendar ---------- */
-  .cfoot{margin-top:9px}
-  .cal-btn{font:inherit;cursor:pointer}
+  /* ---------- card actions: calendar + photos ---------- */
+  .cfoot{margin-top:9px;display:flex;gap:7px;flex-wrap:wrap}
+  .cal-btn,.photos-btn{font:inherit;cursor:pointer}
   .cal-btn.chip{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.03em;
     background:rgba(200,64,46,.07);border:1px solid rgba(200,64,46,.28);color:var(--lantern-dim);
     padding:5px 11px;border-radius:999px}
   .cal-btn.chip:hover{background:rgba(200,64,46,.14);border-color:var(--lantern)}
+  .photos-btn.chip{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.03em;
+    background:rgba(17,24,48,.05);border:1px solid var(--line-strong);color:var(--muted);
+    padding:5px 11px;border-radius:999px}
+  .photos-btn.chip:hover{border-color:var(--ink);color:var(--ink)}
   .btn.cal{background:var(--ink);color:var(--board-text)}
   .btn.cal:hover{filter:brightness(1.12)}
+  .btn.photos{background:transparent;border-color:var(--line-strong);color:var(--ink)}
+  .btn.photos:hover{border-color:var(--ink)}
   .cal-quick{display:flex;flex-direction:column;gap:8px}
   .cal-quick .qbtn{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:10px;
     padding:11px 13px;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
@@ -896,6 +902,8 @@ const EAT_CREDIT = "Rodrigo Fernández · «Sitios top en Japón»";
 function rMapsSearch(r){ return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(r.name+" "+r.area+" Tokyo"); }
 function rMapsRoute(r){ return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(HOME_STATION)+"&destination="+encodeURIComponent(r.name+" "+r.area+" Tokyo")+"&travelmode=transit"; }
 function stars(n){ return '<span class="star">★'+n.toFixed(1)+'</span>'; }
+// Opens the place on Google Maps, where its real photo gallery lives
+function photosUrl(q){ return "https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q); }
 
 /* =========================================================================
    SHARED CALENDAR  —  family Google Calendar "Ōtsuka Summer 2026".
@@ -1073,7 +1081,7 @@ function cardHTML(p){
       </div>
       <p>${esc(p.blurb)}</p>
       <div class="meta">${p.dates?`<span class="tag" style="border-color:var(--lantern);color:var(--lantern-dim)">${esc(p.dates)}</span>`:''}${tags}</div>
-      <div class="cfoot"><button class="cal-btn chip" data-place="${p.id}" type="button">📅 Add to calendar</button></div>
+      <div class="cfoot">${p.mapsDest?`<button class="photos-btn chip" data-q="${escAttr(p.mapsDest)}" type="button">📷 Photos</button>`:''}<button class="cal-btn chip" data-place="${p.id}" type="button">📅 Add to calendar</button></div>
     </div>
   </a>`;
 }
@@ -1160,6 +1168,7 @@ function renderPlace(id){
 
     <div class="actions">
       <button class="btn cal cal-btn" data-place="${p.id}" type="button">📅 Add to calendar</button>
+      ${p.mapsDest?`<a class="btn photos" href="${photosUrl(p.mapsDest)}" target="_blank" rel="noopener">📷 Photos</a>`:''}
       ${p.mapsDest?`<a class="btn map" href="${mapsUrl(p.mapsDest)}" target="_blank" rel="noopener">▷ Route from Ōtsuka (live trains)</a>`:''}
       ${p.official?`<a class="btn site" href="${esc(p.official)}" target="_blank" rel="noopener">◎ Official site — hours & prices</a>`:''}
     </div>
@@ -1186,7 +1195,7 @@ function rcardHTML(r){
   return `<a class="rcard" href="${rMapsSearch(r)}" target="_blank" rel="noopener">
     <div class="rt"><h4>${esc(r.name)}</h4><span class="a">${esc(r.area)}</span></div>
     <div class="c">${esc(r.category)}</div>
-    <div class="m">${stars(r.rating)}<span>(${r.reviews.toLocaleString()})</span>${r.price?'<span>· '+esc(r.price)+'</span>':''}<span style="margin-left:auto">Maps ↗</span></div>
+    <div class="m">${stars(r.rating)}<span>(${r.reviews.toLocaleString()})</span>${r.price?'<span>· '+esc(r.price)+'</span>':''}<span style="margin-left:auto">📷 Photos ↗</span></div>
   </a>`;
 }
 function renderEat(){
@@ -1315,8 +1324,10 @@ menuBtn.addEventListener('click',()=>{
   const open = navEl.classList.toggle('open');
   menuBtn.setAttribute('aria-expanded', open?'true':'false');
 });
-// "Add to calendar" buttons (inside cards, on detail pages, on the calendar page)
+// "Add to calendar" & "Photos" buttons (inside cards, on detail pages, on the calendar page)
 document.addEventListener('click',e=>{
+  const ph = e.target.closest('.photos-btn');
+  if(ph){ e.preventDefault(); e.stopPropagation(); window.open(photosUrl(ph.getAttribute('data-q')),'_blank','noopener'); return; }
   const b = e.target.closest('.cal-btn');
   if(b){ e.preventDefault(); e.stopPropagation(); openCalModal(b.getAttribute('data-place')); }
 });
