@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ōtsuka Summer — A Tokyo Field Guide</title>
+<meta name="description" content="Our family's month in Tokyo, July–August 2026. Based at Ōtsuka. Every recommendation with full logistics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#111830;          /* deep indigo night */
+    --ink-2:#1B2647;
+    --paper:#EDEEE6;        /* cool ivory / tatami */
+    --surface:#FBFBF7;
+    --lantern:#C8402E;      /* matsuri vermilion */
+    --lantern-dim:#9E3122;
+    --gold:#C79A46;         /* aged brass */
+    --muted:#5B647A;
+    --line:rgba(17,24,48,.14);
+    --line-strong:rgba(17,24,48,.28);
+    --board:#0C1226;        /* departure board */
+    --board-text:#F4E7B8;
+    --ok:#2E6E4E;
+    --shadow:0 1px 0 rgba(17,24,48,.05), 0 14px 34px -18px rgba(17,24,48,.35);
+    --r:14px;
+    --maxw:960px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Zen Kaku Gothic New",system-ui,-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+    line-height:1.6;-webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  img{max-width:100%;display:block}
+
+  /* ---------- top bar ---------- */
+  header.top{
+    position:sticky;top:0;z-index:50;background:var(--ink);color:var(--paper);
+    border-bottom:2px solid var(--gold);
+  }
+  .top-in{max-width:var(--maxw);margin:0 auto;display:flex;align-items:center;gap:14px;
+    padding:11px 18px;}
+  .brand{display:flex;align-items:center;gap:11px;cursor:pointer;text-decoration:none;color:var(--paper);
+    background:none;border:0;padding:0;font:inherit}
+  .stamp{width:38px;height:38px;flex:0 0 auto;border:1.5px solid var(--lantern);border-radius:8px;
+    display:grid;place-items:center;color:var(--board-text);background:rgba(200,64,46,.10);
+    font-family:"Zen Old Mincho",serif;font-weight:700;font-size:20px;line-height:1}
+  .brand b{font-family:"Zen Old Mincho",serif;font-weight:700;font-size:16px;letter-spacing:.2px;display:block}
+  .brand span{font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.14em;color:var(--gold);
+    text-transform:uppercase}
+  .top nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+  .top nav a{font-family:"Space Mono",monospace;font-size:12px;letter-spacing:.05em;text-decoration:none;
+    color:var(--paper);opacity:.82;padding:7px 9px;border-radius:8px;white-space:nowrap}
+  .top nav a:hover{opacity:1;background:rgba(255,255,255,.08)}
+  .top nav a.on{opacity:1;color:var(--board-text);background:rgba(199,154,70,.14)}
+  .menu-btn{display:none}
+
+  main{max-width:var(--maxw);margin:0 auto;padding:0 18px 90px}
+
+  /* ---------- home hero (departure board) ---------- */
+  .hero{margin:22px 0 30px;border-radius:var(--r);overflow:hidden;background:var(--ink);color:var(--paper);
+    box-shadow:var(--shadow);position:relative}
+  .hero .eyebrow{font-family:"Space Mono",monospace;font-size:11.5px;letter-spacing:.22em;color:var(--gold);
+    text-transform:uppercase;margin:0 0 10px}
+  .hero-in{padding:34px 26px 30px}
+  .hero h1{font-family:"Zen Old Mincho",serif;font-weight:900;line-height:1.02;margin:0 0 14px;
+    font-size:clamp(30px,7vw,54px)}
+  .hero h1 .jp{display:block;font-size:.5em;color:var(--board-text);font-weight:600;letter-spacing:.04em;margin-top:6px}
+  .hero p.lead{max-width:52ch;color:#D6DAE6;margin:0 0 20px;font-size:15.5px}
+  .board{background:var(--board);border:1px solid rgba(199,154,70,.4);border-radius:10px;
+    font-family:"Space Mono",monospace;color:var(--board-text);overflow:hidden}
+  .board .row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+    padding:11px 15px;border-bottom:1px dashed rgba(199,154,70,.22);font-size:13px}
+  .board .row:last-child{border-bottom:0}
+  .board .rt{color:#8EA0C8}
+  .board .rc{color:var(--lantern);font-weight:700}
+  .board .rd{text-align:right;color:#EFE3B4}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+  .chip{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.04em;padding:5px 10px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.25);color:#E7EAF2;text-decoration:none}
+  .chip:hover{border-color:var(--gold);color:#fff}
+
+  /* ---------- section headings ---------- */
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:34px 0 15px}
+  .sec-head .n{font-family:"Space Mono",monospace;color:var(--lantern);font-size:13px;font-weight:700}
+  .sec-head h2{font-family:"Zen Old Mincho",serif;font-size:clamp(20px,4.5vw,26px);margin:0;font-weight:700}
+  .sec-head .sub{margin-left:auto;color:var(--muted);font-size:12.5px;font-family:"Space Mono",monospace}
+
+  /* ---------- category grid (home) ---------- */
+  .catgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+  .cat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 16px 14px;
+    text-decoration:none;color:inherit;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+    display:flex;flex-direction:column;gap:6px;min-height:118px}
+  .cat:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:var(--shadow)}
+  .cat .kanji{font-family:"Zen Old Mincho",serif;font-size:26px;color:var(--lantern);line-height:1}
+  .cat h3{margin:2px 0 0;font-size:16px;font-family:"Zen Kaku Gothic New";font-weight:700}
+  .cat p{margin:0;color:var(--muted);font-size:12.5px;line-height:1.45}
+  .cat .count{margin-top:auto;font-family:"Space Mono",monospace;font-size:11px;color:var(--gold);letter-spacing:.06em}
+
+  /* ---------- place cards (category list) ---------- */
+  .cardgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+    text-decoration:none;color:inherit;display:flex;flex-direction:column;
+    transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+  .card .cbody{padding:15px 16px 16px;display:flex;flex-direction:column;gap:7px;flex:1}
+  .card .ctop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .card h3{margin:0;font-size:17px;font-weight:700}
+  .card .jp{font-family:"Zen Old Mincho",serif;color:var(--muted);font-size:12.5px}
+  .card p{margin:0;color:#3a4256;font-size:13.5px;flex:1}
+  .card .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:2px}
+  .mono{font-family:"Space Mono",monospace}
+  .time-badge{font-family:"Space Mono",monospace;font-size:11px;background:var(--ink);color:var(--board-text);
+    padding:3px 8px;border-radius:6px;letter-spacing:.03em;white-space:nowrap}
+  .tag{font-size:10.5px;font-family:"Space Mono",monospace;letter-spacing:.03em;padding:3px 8px;border-radius:999px;
+    border:1px solid var(--line-strong);color:var(--muted)}
+  .tag.you{border-color:#3a5aa8;color:#2f4c93}
+  .tag.wife{border-color:var(--lantern);color:var(--lantern-dim)}
+  .tag.kids{border-color:#3f8f5f;color:#2c6f47}
+  .tag.family{border-color:var(--gold);color:#8a6a1f}
+
+  /* ---------- detail page ---------- */
+  .back{display:inline-flex;align-items:center;gap:7px;margin:20px 0 0;font-family:"Space Mono",monospace;
+    font-size:12px;letter-spacing:.05em;text-decoration:none;color:var(--muted)}
+  .back:hover{color:var(--lantern)}
+  .detail-hero{margin:14px 0 22px;background:var(--ink);border-radius:var(--r);color:var(--paper);
+    box-shadow:var(--shadow);overflow:hidden}
+  .dh-in{padding:24px 24px 22px}
+  .dh-cat{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  .dh-in h1{font-family:"Zen Old Mincho",serif;font-size:clamp(24px,5.5vw,38px);margin:8px 0 3px;line-height:1.05}
+  .dh-jp{font-family:"Zen Old Mincho",serif;color:var(--board-text);font-size:15px;margin-bottom:14px}
+  .depart{background:var(--board);border:1px solid rgba(199,154,70,.4);border-radius:10px;padding:12px 14px;
+    font-family:"Space Mono",monospace;display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+  .depart .from,.depart .to{min-width:0}
+  .depart .lbl{font-size:9.5px;letter-spacing:.16em;color:#8EA0C8;text-transform:uppercase}
+  .depart .st{font-size:15px;color:var(--board-text);font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .depart .arrow{color:var(--lantern);font-size:18px;display:flex;flex-direction:column;align-items:center;line-height:1}
+  .depart .arrow small{font-size:9px;color:#8EA0C8;letter-spacing:.05em;margin-top:3px;white-space:nowrap}
+  .dh-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
+  .dh-tags .tag{border-color:rgba(255,255,255,.28);color:#E7EAF2}
+
+  .spec{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .spec .line{display:grid;grid-template-columns:132px 1fr;gap:16px;padding:14px 18px;border-bottom:1px solid var(--line);
+    align-items:start}
+  .spec .line:last-child{border-bottom:0}
+  .spec .k{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    padding-top:2px}
+  .spec .v{font-size:14.5px;color:#26304a}
+  .spec .v b{color:var(--ink)}
+  .spec ul{margin:0;padding-left:18px}
+  .spec ul li{margin:3px 0}
+
+  .confirm{margin:14px 0 0;background:rgba(200,64,46,.07);border:1px solid rgba(200,64,46,.28);
+    border-radius:12px;padding:12px 15px;font-size:13px;color:var(--lantern-dim);display:flex;gap:10px}
+  .confirm b{color:var(--lantern-dim)}
+  .confirm .i{font-family:"Zen Old Mincho",serif;font-weight:700;flex:0 0 auto}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 8px}
+  .btn{font-family:"Space Mono",monospace;font-size:13px;letter-spacing:.02em;text-decoration:none;
+    padding:11px 16px;border-radius:10px;display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;
+    transition:transform .12s ease,filter .12s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.map{background:var(--lantern);color:#fff}
+  .btn.map:hover{filter:brightness(1.06)}
+  .btn.site{background:transparent;border-color:var(--line-strong);color:var(--ink)}
+  .btn.site:hover{border-color:var(--ink)}
+
+  .related{margin-top:34px}
+
+  /* ---------- generic info blocks ---------- */
+  .prose{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:22px 22px;
+    max-width:70ch}
+  .prose h3{font-family:"Zen Old Mincho",serif;margin:20px 0 8px;font-size:18px}
+  .prose h3:first-child{margin-top:0}
+  .prose p{margin:0 0 12px;font-size:14.5px}
+  .prose code{font-family:"Space Mono",monospace;background:var(--paper);padding:2px 6px;border-radius:5px;font-size:12.5px}
+  .steps{counter-reset:s;list-style:none;padding:0;margin:0}
+  .steps li{counter-increment:s;position:relative;padding:0 0 14px 40px;font-size:14.5px}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:26px;height:26px;border-radius:8px;
+    background:var(--ink);color:var(--board-text);font-family:"Space Mono",monospace;font-size:13px;
+    display:grid;place-items:center}
+  .steps li b{display:block;font-family:"Zen Kaku Gothic New";font-weight:700;color:var(--ink)}
+
+  footer{max-width:var(--maxw);margin:0 auto;padding:26px 18px 40px;color:var(--muted);font-size:12px;
+    border-top:1px solid var(--line);font-family:"Space Mono",monospace;letter-spacing:.02em}
+  footer a{color:var(--lantern-dim)}
+
+  .empty{padding:40px;text-align:center;color:var(--muted)}
+
+  @media (max-width:640px){
+    .top nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--ink-2);flex-direction:column;
+      padding:8px;gap:2px;border-bottom:2px solid var(--gold)}
+    .top nav.open{display:flex}
+    .top nav a{padding:11px 12px}
+    .menu-btn{display:inline-flex;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.3);color:var(--paper);
+      border-radius:8px;padding:7px 11px;font-family:"Space Mono",monospace;font-size:12px;cursor:pointer}
+    .spec .line{grid-template-columns:1fr;gap:4px;padding:13px 15px}
+    .depart{grid-template-columns:1fr auto 1fr;gap:6px}
+    .depart .st{font-size:13px}
+    .hero-in,.dh-in{padding:24px 18px 22px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .fade{animation:fade .4s ease both}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  :focus-visible{outline:2.5px solid var(--lantern);outline-offset:2px;border-radius:4px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/" aria-label="Home">
+      <span class="stamp">大</span>
+      <span>
+        <b>Ōtsuka Summer</b>
+        <span>Tokyo · 18 Jul – 15 Aug 2026</span>
+      </span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-expanded="false">Menu</button>
+    <nav id="nav"></nav>
+  </div>
+</header>
+
+<main id="app"></main>
+
+<footer>
+  Family field guide · built to be edited. See <a href="#/about">How to update &amp; publish this site</a>.
+  Always confirm hours, prices &amp; festival dates on each official site before you go.
+</footer>
+
+<script>
+/* =========================================================================
+   DATA  —  edit here to keep the guide up to date.
+   Every place = one page.  Blank fields are fine.
+   ========================================================================= */
+const HOME_STATION = "Ōtsuka Station, Toshima, Tokyo";
+
+const CATEGORIES = [
+  {id:"base",    kanji:"家", name:"Home base & daily life", blurb:"Ōtsuka, groceries, gym, garbage, cinema — the everyday machinery."},
+  {id:"puzzles", kanji:"組", name:"Mechanical puzzles",     blurb:"Karakuri boxes, cubes and trick shops for your solo mornings."},
+  {id:"games",   kanji:"遊", name:"Board & card games",     blurb:"Play by the hour or buy — mostly one stop away in Ikebukuro."},
+  {id:"go",      kanji:"碁", name:"Go · 囲碁 · weiqi",       blurb:"Salons where a foreign player will find curious opponents."},
+  {id:"anime",   kanji:"漫", name:"Anime & manga",          blurb:"Otome Road is on your doorstep; Akihabara & Nakano for the hunt."},
+  {id:"cats",    kanji:"猫", name:"Cat cafés",              blurb:"The kids' request. Three good ones, all minutes from home."},
+  {id:"festivals",kanji:"祭",name:"Matsuri & fireworks",    blurb:"Your exact-dates calendar — including a rare full-scale year."},
+  {id:"family",  kanji:"家族",name:"Family days out",        blurb:"For 6–15 Aug, when everyone's together."},
+  {id:"extras",  kanji:"他", name:"Beyond the list",        blurb:"Quiet corners and extras that suit who you are."},
+];
+
+// audience tag helper
+const T = { you:"For you", wife:"Wife's pick", kids:"Kids' pick", family:"Whole family", solo:"Solo day" };
+
+const PLACES = [
+  /* ---------------- HOME BASE ---------------- */
+  {
+    id:"otsuka", cat:"base", name:"Ōtsuka — your base", jp:"大塚",
+    tags:["family"], time:"HOME",
+    blurb:"Quiet, affordable, and three minutes from Ikebukuro on the Yamanote loop. The whole guide is measured from here.",
+    address:"Around JR Ōtsuka Station, Toshima ward", station:"JR Ōtsuka (Yamanote line) + Toden Arakawa streetcar",
+    route:"You're already here — this is home.",
+    hours:"—", price:"—",
+    reservation:"—",
+    tips:[
+      "Train times from Ōtsuka: Ikebukuro 3 min · Shinjuku 11 · Ueno 13 · Harajuku 16 · Shibuya 18 · Tokyo Stn 24 · Akihabara 24.",
+      "24-hour Don Quijote (Picasso) at the station for toiletries, snacks, sundries and souvenirs.",
+      "Lawson 100 (everything ≈¥100) for cheap fruit & veg; Big Echo / Karaoke-Kan karaoke 2 min away.",
+      "The Toden Arakawa streetcar from Ōtsuka is a lovely, slow way to see old-Tokyo neighbourhoods."
+    ],
+    mapsDest:"Otsuka Station Toshima Tokyo", official:"https://www.gotokyo.org/en/destinations/northern-tokyo/ikebukuro/index.html"
+  },
+  {
+    id:"supermarket", cat:"base", name:"Groceries & toiletries", jp:"スーパー",
+    tags:["family"], time:"NEARBY",
+    blurb:"Where to do the weekly shop and the midnight top-up while working evenings.",
+    address:"Ōtsuka & Ikebukuro", station:"Ōtsuka / Ikebukuro (1 stop)",
+    route:"Konbini everywhere; full supermarkets around Ōtsuka & one stop away in Ikebukuro.",
+    hours:"Many Maruetsu branches open 24 h or very late; konbini 24 h.",
+    price:"Cheapest: OK Store, Gyomu Super, Lawson 100. Mid: Life, Maruetsu, Summit, Seiyu.",
+    reservation:"None.",
+    tips:[
+      "For everyday food: Life, Maruetsu, Summit or Seiyu. Maruetsu often runs late/24 h — good on work nights.",
+      "Imported goods (cheese, wine, spices): Kaldi & the international grocery inside Sunshine City, Ikebukuro.",
+      "Ready-meals (bento/sōzai) get discount stickers in the evening — handy before your 5 pm shift.",
+      "Toiletries cheapest at Don Quijote + drugstores (Matsumoto Kiyoshi, Welcia, Sundrug) by both stations.",
+      "Load a Suica/PASMO IC card day one — pays at konbini, supermarkets and trains."
+    ],
+    mapsDest:"supermarket near Otsuka Station Tokyo", official:""
+  },
+  {
+    id:"gym", cat:"base", name:"Ikebukuro Sports Center", jp:"池袋スポーツセンター",
+    tags:["you","solo"], time:"~8 MIN",
+    blurb:"Public gym, no membership — pay per visit. Exactly what you asked for, twice a week.",
+    address:"Kamiikebukuro 2-5-1, 'Kenkō Plaza Toshima' (upper floors)", station:"JR Ikebukuro (1 stop from Ōtsuka), ~5–7 min walk",
+    route:"Yamanote 1 stop to Ikebukuro (3 min), then walk ~5–7 min.",
+    hours:"Mon–Sat 08:30–22:00 · Sun 08:30–21:00 (training room/pool close ~15 min before; last entry ~30 min before).",
+    price:"≈¥400–600 for a 2-hour session (training room + pool + sauna). Prepaid multi-entry cards available.",
+    reservation:"No booking. First visit: quick registration + simple health check.",
+    tips:[
+      "Bring clean indoor shoes (or rent) — outdoor shoes not allowed in the training room.",
+      "Opens 08:30 and gets busy; a morning session before work is the sweet spot.",
+      "~50 machines, cardio, pool, jacuzzi. Tattoos are fine here.",
+      "Free locker included."
+    ],
+    mapsDest:"Ikebukuro Sports Center Kenko Plaza Toshima", official:"http://www.ikespo.jp/indexe.html"
+  },
+  {
+    id:"garbage", cat:"base", name:"Garbage & recycling (Toshima)", jp:"ごみの分別",
+    tags:["family"], time:"AT HOME",
+    blurb:"Tokyo is strict but simple once you know the four streams. This is the short version for Toshima ward.",
+    address:"Toshima ward rules", station:"—",
+    route:"—",
+    hours:"Out by 08:00 on the correct day — never the night before (unless your building has a covered bin area).",
+    price:"Free (no paid bags in the 23 wards).",
+    reservation:"Oversized items only: book a pickup + buy a sticker at a konbini.",
+    tips:[
+      "Use transparent / semi-transparent bags. Black or opaque bags get left behind.",
+      "Four streams: burnable (moyaseru) · non-burnable (moyasenai) · recyclables & PET bottles (shigen) · oversized.",
+      "Rinse PET bottles, remove caps & labels; flatten & tie cardboard.",
+      "Collection weekday varies by chome — get your building's rule sheet & trash-point from the landlord/host.",
+      "Wrong day = not collected. Bring it back in and wait for the next day."
+    ],
+    mapsDest:"", official:"https://www.city.toshima.lg.jp/foreign/english/index.html",
+    confirm:"Exact collection days depend on your street. Ask your accommodation for the building's schedule and bin location — that's all you need for a short stay."
+  },
+  {
+    id:"cinema", cat:"base", name:"Cinemas (Ikebukuro)", jp:"映画館",
+    tags:["you","family"], time:"~3 MIN",
+    blurb:"Three big complexes one stop away, including the largest screen in Japan.",
+    address:"Ikebukuro", station:"JR Ikebukuro (1 stop)",
+    route:"Yamanote 1 stop to Ikebukuro, all within a few minutes' walk of the east exit.",
+    hours:"Roughly 09:00–24:00; varies by film.",
+    price:"≈¥2,000 adult. Cheaper on Wednesdays & 'Cinema Day' (the 1st of the month).",
+    reservation:"Reserve seats via each chain's app or lobby machines (recommended weekends).",
+    tips:[
+      "Grand Cinema Sunshine — largest screen in Japan, plus IMAX/4DX.",
+      "TOHO Cinemas Ikebukuro & Ikebukuro HUMAX Cinemas are also right there.",
+      "Foreign films are usually shown subtitled (字幕 = subtitles) in the original language — English films are watchable.",
+      "Japanese films & most anime screenings have no English subtitles."
+    ],
+    mapsDest:"Grand Cinema Sunshine Ikebukuro", official:"https://hlo.tohotheater.jp/"
+  },
+
+  /* ---------------- PUZZLES ---------------- */
+  {
+    id:"torito", cat:"puzzles", name:"Puzzle Shop Torito", jp:"パズルショップ トリト",
+    tags:["you","solo"], time:"~25 MIN",
+    blurb:"The specialist: a small shop crammed with mechanical puzzles, cubes and Hanayama-style teasers.",
+    address:"2-7-3 Taito, Seto Bldg 5F (Okachimachi / Akihabara area)", station:"JR Okachimachi / Akihabara",
+    route:"Yamanote to Akihabara/Okachimachi (~25 min), then a short walk. Tap 'Route from Ōtsuka' for live trains.",
+    hours:"Confirm current hours on the shop site (it's a small independent shop).",
+    price:"Puzzles from a few hundred yen up to collector pieces.",
+    reservation:"None.",
+    tips:[
+      "Best in Tokyo for mechanical & disentanglement puzzles and speed cubes.",
+      "Given your own puzzle-designing bent, budget time to browse properly.",
+      "Pairs well with Akihabara (retro arcades, Mandarake) the same afternoon."
+    ],
+    mapsDest:"Puzzle Shop Torito Taito Tokyo", official:"http://www.torito.jp/",
+    confirm:"Torito has moved before and keeps small-shop hours — check the site / Google listing the morning you go."
+  },
+  {
+    id:"soshite", cat:"puzzles", name:"MA by So Shi Te (puzzle boxes)", jp:"秘密箱・からくり箱",
+    tags:["you","solo"], time:"~30 MIN",
+    blurb:"Japanese himitsubako secret boxes and modern karakuri trick boxes, from easy slides to 32-move monsters.",
+    address:"Aoyama area — 2 stops from Shibuya on the Ginza line", station:"Gaienmae / Omotesandō (Ginza line)",
+    route:"Yamanote to Shibuya (18 min), then Ginza line 2 stops. Live route below.",
+    hours:"Confirm on the shop's page before visiting.",
+    price:"New Himitsubako boxes ≈¥11,000–12,500; simpler boxes less. Tax-free with passport over ¥5,000.",
+    reservation:"None; you can also order to your hotel by email/PayPal.",
+    tips:[
+      "Try to open the New Himitsubako No.4 in-store — 32+ moves in a precise sequence, the hardest they stock.",
+      "They also carry a limited line of Hanayama cast puzzles.",
+      "Boxes come with instructions and can be gift-wrapped."
+    ],
+    mapsDest:"MA by So Shi Te puzzle box shop Tokyo", official:"https://mabysoshite.com/"
+  },
+  {
+    id:"hakone-karakuri", cat:"puzzles", name:"Hakone Karakuri Museum & shop", jp:"箱根からくり美術館",
+    tags:["you","family"], time:"DAY TRIP",
+    blurb:"The source: artisan puzzle boxes from the Karakuri Creation Group. Fold it into a family Hakone day.",
+    address:"Hakone 16, Hakone-machi, Kanagawa", station:"Hakone-Yumoto, then Hakone-Tozan bus",
+    route:"Yamanote to Shinjuku (11 min) → Odakyu (Romancecar ~85 min) to Hakone-Yumoto → local bus.",
+    hours:"Museum open daytime (shop hours vary) — confirm on the site.",
+    price:"Museum ≈¥800 adult / ¥500 child (6–12) / under-6 free.",
+    reservation:"Romancecar seats worth reserving in summer; museum none.",
+    tips:[
+      "Perfect to combine with a family Hakone day (open-air museum, lake pirate ship, onsen).",
+      "The finest artisan himitsubako in Japan are made in this region."
+    ],
+    mapsDest:"Hakone Karakuri Museum Kanagawa", official:"https://hakone-karakuri.jp/"
+  },
+
+  /* ---------------- GAMES ---------------- */
+  {
+    id:"jellyjelly", cat:"games", name:"Jelly Jelly Cafe Ikebukuro", jp:"ジェリージェリーカフェ",
+    tags:["you","solo"], time:"~3 MIN",
+    blurb:"Your closest board-game café: 500+ titles, one flat time-based fee, completely smoke-free.",
+    address:"2-12-9 Ikebukuro, Hirose Bldg 3F, Toshima", station:"JR Ikebukuro (1 stop)",
+    route:"Yamanote 1 stop to Ikebukuro, short walk.",
+    hours:"Board-game cafés often open afternoon/evening — check the day's hours on their site.",
+    price:"Time-based single fee covering all games (buy a drink). Free Wi-Fi & charging.",
+    reservation:"Walk-in usually fine on weekday afternoons; reserve for evenings/weekends.",
+    tips:[
+      "500+ games from party fillers to heavy euros.",
+      "Staff can help you learn Japanese-only games.",
+      "Bring your own snacks; drinks bought there."
+    ],
+    mapsDest:"Jelly Jelly Cafe Ikebukuro", official:"https://jellyjellycafe.com/en"
+  },
+  {
+    id:"yellowsub", cat:"games", name:"Yellow Submarine (buy games)", jp:"イエローサブマリン",
+    tags:["you","solo"], time:"~3 MIN",
+    blurb:"Japan's biggest board-game store — Catan to Twilight Imperium. Branches in Ikebukuro, Shinjuku, Akihabara.",
+    address:"Ikebukuro / Shinjuku / Akihabara branches", station:"JR Ikebukuro (1 stop)",
+    route:"Ikebukuro branch is 1 stop from Ōtsuka.",
+    hours:"Standard retail hours — confirm per branch.",
+    price:"Retail; they also buy used games (English or Japanese) at fair prices.",
+    reservation:"None.",
+    tips:[
+      "Mostly Japanese-language editions; some branches keep a small English section.",
+      "Great for TTRPG books, dice and figures too.",
+      "Sugorokuya in Jimbōchō/Kichijōji is the other enthusiast shop worth a trip."
+    ],
+    mapsDest:"Yellow Submarine Ikebukuro board games", official:"https://yellowsubmarine.co.jp/"
+  },
+  {
+    id:"dyce", cat:"games", name:"DyCE (English board-game café)", jp:"渋谷ボードゲームカフェ",
+    tags:["you"], time:"~20 MIN",
+    blurb:"Language-exchange board-game café — 300+ games and staff who'll translate the rules. Best in the evening.",
+    address:"Shibuya (near Shibuya Station)", station:"JR Shibuya",
+    route:"Yamanote to Shibuya (~18 min), ~5 min walk.",
+    hours:"Livelier in the evenings — which clashes with your work hours, so treat as an off-day option.",
+    price:"1 drink or all-you-can-drink (non-alc from ≈¥950); food from ≈¥500.",
+    reservation:"Check their Meetup / site for event nights.",
+    tips:[
+      "First language-exchange + board-game café in Japan; friendly to solo visitors.",
+      "They'll translate Japanese-only games for you.",
+      "If you get a free evening, this is the social pick."
+    ],
+    mapsDest:"DyCE Global Board Game Cafe Shibuya", official:"https://www.meetup.com/dyce-global-board-game-cafe/"
+  },
+
+  /* ---------------- GO ---------------- */
+  {
+    id:"nihonkiin", cat:"go", name:"Nihon Ki-in Go salon", jp:"日本棋院",
+    tags:["you","solo"], time:"~25 MIN",
+    blurb:"The Japan Go Association's own salon — plus a small Go museum & shop. Curious opponents guaranteed.",
+    address:"Ichigaya / Gobanchō, Chiyoda", station:"Ichigaya (Chuo-Sobu / Namboku / Yūrakuchō lines)",
+    route:"JR to Ikebukuro then metro toward Ichigaya, ~25 min. Live route below.",
+    hours:"Historically ~11:00–18:00 (Thu to 20:00). Confirm current hours & location.",
+    price:"≈¥1,500 for the day; about half price after 16:00.",
+    reservation:"Walk in.",
+    tips:[
+      "Japanese players rarely meet foreign Go players — expect friendly, curious opponents.",
+      "Basement museum traces the game's history; shop sells boards, stones & books.",
+      "Café & Igo Hidamari (Kamiikedai) is a cosier, coffee-and-Go alternative."
+    ],
+    mapsDest:"Nihon Ki-in Ichigaya Tokyo", official:"https://www.nihonkiin.or.jp/english/",
+    confirm:"The Ki-in has been reorganising its Ichigaya HQ — confirm the current address, hours and that the walk-in salon is open before travelling."
+  },
+  {
+    id:"hidamari", cat:"go", name:"Café & Igo Hidamari", jp:"囲碁カフェ ひだまり",
+    tags:["you","solo"], time:"~35 MIN",
+    blurb:"A sunlit café built around Go — play over coffee, with events for all levels.",
+    address:"Kamiikedai area", station:"Kamiikedai (Tōkyū Ikegami line)",
+    route:"South-west of centre; ~35 min via Yamanote + Tōkyū. Live route below.",
+    hours:"Confirm on their site / social.",
+    price:"Café prices + a play fee — check current.",
+    reservation:"Recommended for events.",
+    tips:[
+      "Relaxed, welcoming atmosphere — good if the Ki-in salon feels intimidating.",
+      "Owner is a keen player and hosts beginner-friendly events."
+    ],
+    mapsDest:"Cafe and Igo Hidamari Kamiikedai Tokyo", official:"https://www.igo-hidamari.com/"
+  },
+
+  /* ---------------- ANIME ---------------- */
+  {
+    id:"otomeroad", cat:"anime", name:"Otome Road & Animate Ikebukuro", jp:"乙女ロード",
+    tags:["you","kids","family"], time:"~3 MIN",
+    blurb:"Ikebukuro's anime heart — Animate flagship, K-Books, Mandarake — all one stop from home.",
+    address:"By Sunshine City, Higashi-Ikebukuro", station:"JR Ikebukuro (1 stop)",
+    route:"Yamanote 1 stop to Ikebukuro, follow signs to Sunshine City.",
+    hours:"Most shops ~10:00/11:00–20:00/21:00.",
+    price:"Free to browse. Tax-free over ¥5,000 with passport.",
+    reservation:"None.",
+    tips:[
+      "Animate Ikebukuro is the flagship & largest branch of Japan's biggest anime retailer.",
+      "K-Books, Lashinbang & Mandarake for second-hand goods and doujinshi.",
+      "Sunshine City has Pokémon Center Mega Tokyo & character stores — good with the kids."
+    ],
+    mapsDest:"Animate Ikebukuro Otome Road", official:"https://www.animate.co.jp/"
+  },
+  {
+    id:"akihabara", cat:"anime", name:"Akihabara", jp:"秋葉原",
+    tags:["you","family"], time:"~24 MIN",
+    blurb:"The Electric Town — new goods, maid cafés, multi-floor Mandarake & Radio Kaikan.",
+    address:"Akihabara, Chiyoda/Taito", station:"JR Akihabara",
+    route:"JR to Akihabara ~24 min. Live route below.",
+    hours:"Shops ~10:00/11:00–20:00; some cafés later.",
+    price:"Free to explore.",
+    reservation:"Maid/themed cafés may need a wait; figure shops none.",
+    tips:[
+      "Side streets & upper floors hide better second-hand value than the main drag.",
+      "Combine with Torito puzzles — they're in the same corner of the city.",
+      "Super Potato for retro games; Hey / Taito Station arcades for a strategy-game fix."
+    ],
+    mapsDest:"Akihabara Electric Town Tokyo", official:"https://www.gotokyo.org/en/destinations/eastern-tokyo/akihabara/index.html"
+  },
+  {
+    id:"nakano", cat:"anime", name:"Nakano Broadway", jp:"中野ブロードウェイ",
+    tags:["you","solo"], time:"~30 MIN",
+    blurb:"Quiet, local, collector's paradise: 300+ shops and 30+ Mandarake stores for rare vintage finds.",
+    address:"5-52-15 Nakano, Nakano City", station:"JR Nakano (5 min walk)",
+    route:"Yamanote to Shinjuku (11 min) → Chuo/Sobu to Nakano. Live route below.",
+    hours:"Most shops ~12:00–20:00 (some open 11:00 weekends).",
+    price:"Free; second-hand prices from ¥100 first-edition manga up.",
+    reservation:"None.",
+    tips:[
+      "The opposite of Akihabara: quiet corridors, mostly Japanese collectors.",
+      "For out-of-print manga, discontinued figures and animation cels.",
+      "Compare floor-to-floor — the third shop on a floor often undercuts the first."
+    ],
+    mapsDest:"Nakano Broadway Tokyo", official:"https://nakano-broadway.com/"
+  },
+
+  /* ---------------- CATS ---------------- */
+  {
+    id:"nekorobi", cat:"cats", name:"Nekorobi", jp:"猫カフェ ねころび",
+    tags:["kids","family"], time:"~3 MIN",
+    blurb:"Relaxed 'rest stop with cats' — 10+ friendly cats, drinks included. The family-friendly pick.",
+    address:"Higashi-Ikebukuro 1-28-1, Tact T-O Bldg 3F", station:"JR Ikebukuro (1 stop), ~5 min walk",
+    route:"Yamanote 1 stop to Ikebukuro, ~5 min from the east exit.",
+    hours:"Roughly 11:00–22:00 daily — confirm current hours.",
+    price:"Time-based; minimum 60 min including all-you-can-drink from the vending machine.",
+    reservation:"Walk-in; can be a short wait at busy times.",
+    tips:[
+      "Well-behaved cats, manga & massage chairs — good for the 11- and 15-year-old.",
+      "Etiquette: sanitise hands, don't wake sleeping cats, no picking them up, lid your drink.",
+      "Cats nap in the afternoon — mornings/evenings are livelier."
+    ],
+    mapsDest:"Cat Cafe Nekorobi Ikebukuro", official:"https://www.nekorobi.jp/",
+    confirm:"Check the current age policy — a few cat cafés set a minimum age or require an adult for under-15s (your 11-year-old is fine with you along)."
+  },
+  {
+    id:"mocha", cat:"cats", name:"Mocha Lounge Ikebukuro", jp:"猫カフェ モカ",
+    tags:["kids","family"], time:"~3 MIN",
+    blurb:"One of Tokyo's largest, most beautiful cat cafés — airy, upscale, lounge seating.",
+    address:"Ikebukuro (near the east exit)", station:"JR Ikebukuro (1 stop)",
+    route:"Yamanote 1 stop to Ikebukuro, short walk.",
+    hours:"Typically ~10:00–20:00 — confirm on site.",
+    price:"Per 10-min or set plans + drink bar; a bit pricier than Nekorobi.",
+    reservation:"Walk-in.",
+    tips:[
+      "Spacious and photogenic; great if you want room to spread out.",
+      "Same etiquette as any cat café.",
+      "Good back-up if Nekorobi has a wait."
+    ],
+    mapsDest:"Cat Cafe Mocha Lounge Ikebukuro", official:"https://catmocha.jp/"
+  },
+  {
+    id:"nekobukuro", cat:"cats", name:"Nekobukuro", jp:"ねこぶくろ",
+    tags:["kids"], time:"~3 MIN",
+    blurb:"Cheap, cheerful cat 'playground' (not a drinks café) with many cats. Busier & more chaotic.",
+    address:"Higashi-Ikebukuro 1-28-10, 8F (former Tokyu Hands building)", station:"JR Ikebukuro (1 stop)",
+    route:"Yamanote 1 stop to Ikebukuro, short walk.",
+    hours:"Historically ~10:00–20:00 — confirm (building has rebranded).",
+    price:"≈¥700 entry, no time limit, no re-entry, no drinks served.",
+    reservation:"None.",
+    tips:[
+      "Budget option with lots of cats on 'shifts', but can get crowded and noisy.",
+      "I'd send the kids to Nekorobi or Mocha first; keep this as a cheap extra."
+    ],
+    mapsDest:"Nekobukuro cat playground Ikebukuro", official:"",
+    confirm:"The host building rebranded from Tokyu Hands — confirm it's still operating and its floor before going."
+  },
+
+  /* ---------------- FESTIVALS ---------------- */
+  {
+    id:"fukagawa", cat:"festivals", name:"Fukagawa Hachiman Matsuri", jp:"深川八幡祭り",
+    tags:["wife","family"], time:"~35 MIN", dates:"14–16 Aug 2026 (full-scale year)",
+    blurb:"The wife's highlight. A once-every-3-years 'big year' — the famous water-splashing festival, and 2026 is it.",
+    address:"Tomioka Hachimangū Shrine, Kōtō ward", station:"Monzen-Nakachō (Ōedo / Tōzai lines)",
+    route:"Metro from Ikebukuro toward Monzen-Nakachō, ~35 min. Live route below.",
+    hours:"Fri 14 Aug: rituals · Sat 15 Aug: divine procession · biggest mikoshi parade on the weekend.",
+    price:"Free to watch.",
+    reservation:"None.",
+    tips:[
+      "One of the Three Great Edo Festivals; the full 'hon-matsuri' runs only every 3 years — 2026 qualifies.",
+      "Spectators drench the mikoshi carriers with buckets of water — WEAR CLOTHES YOU DON'T MIND SOAKING.",
+      "Your trip ends 15 Aug — you can catch the 14–15 Aug build-up; the very biggest parade may fall on 16 Aug, so check the shrine schedule."
+    ],
+    mapsDest:"Tomioka Hachimangu Shrine Monzen-Nakacho", official:"http://www.tomiokahachimangu.or.jp/",
+    confirm:"Confirm the exact 2026 mikoshi-parade day on the shrine site — if it's 16 Aug you'd only manage the earlier days before you leave."
+  },
+  {
+    id:"hachioji", cat:"festivals", name:"Hachioji Matsuri", jp:"八王子まつり",
+    tags:["wife","family"], time:"~55 MIN", dates:"7–9 Aug 2026",
+    blurb:"The cleanest matsuri fit with your family week — 19 carved festival floats, taiko and food stalls.",
+    address:"Kōshū-kaidō, central Hachioji (western Tokyo)", station:"JR Hachiōji",
+    route:"JR to Shinjuku, then Chuo line to Hachiōji (~55 min total). Live route below.",
+    hours:"Late afternoon into the evening across the three days.",
+    price:"Free.",
+    reservation:"None.",
+    tips:[
+      "19 elaborately carved dashi floats, each from a different neighbourhood — a proper traditional matsuri.",
+      "Less touristy than central festivals; great with kids.",
+      "Falls right at the start of the family holiday."
+    ],
+    mapsDest:"Hachioji Matsuri Koshu Kaido", official:"https://www.hachiojimatsuri.jp/"
+  },
+  {
+    id:"bonodori", cat:"festivals", name:"Bon Odori (Obon dances)", jp:"盆踊り",
+    tags:["wife","family"], time:"NEARBY", dates:"mid-Aug 2026 (Obon)",
+    blurb:"The easiest 'matsuri' with kids — lantern-lit dance circles anyone can step into, at shrines citywide.",
+    address:"Neighbourhood shrines & temples across Tokyo", station:"Various — likely one near Ōtsuka/Ikebukuro",
+    route:"Look for one within walking distance during your family week.",
+    hours:"Evenings, mid-August.",
+    price:"Free.",
+    reservation:"None.",
+    tips:[
+      "Watch the simple, repeating steps for a minute, then join the circle — nobody minds.",
+      "Tsukiji Honganji Temple's Bon Odori is unusually international and welcoming.",
+      "Yukata are warmly welcomed and cheap to rent if the family wants the full experience."
+    ],
+    mapsDest:"Bon Odori Tokyo August", official:"https://www.gotokyo.org/en/story/guide/the-best-festivals-in-tokyo-and-japan/index.html"
+  },
+  {
+    id:"jingu-gaien", cat:"festivals", name:"Jingu Gaien Fireworks", jp:"神宮外苑花火大会",
+    tags:["family"], time:"~25 MIN", dates:"8 Aug 2026 (rain date 9 Aug)",
+    blurb:"Central, fully-seated fireworks with live music — the easy option during the family week.",
+    address:"Jingu Stadium / Chichibunomiya, Shinjuku", station:"Sendagaya / Shinanomachi (Chuo-Sobu) / National Stadium (Ōedo)",
+    route:"JR to Sendagaya/Shinanomachi, ~25 min. Live route below.",
+    hours:"Gates mid-afternoon, music from late afternoon, fireworks ~19:00–20:30.",
+    price:"All seats reserved & paid — 2025 seats started ≈¥7,000 (2026 likely from ≈¥9,000).",
+    reservation:"Buy tickets in advance — there is no real free-viewing option.",
+    tips:[
+      "≈10,000 shells over the city skyline, paired with live artists — a full evening out.",
+      "Severe weather postpones to 9 Aug rather than cancelling.",
+      "Easiest big fireworks to reach from central Tokyo."
+    ],
+    mapsDest:"Jingu Gaien Fireworks Jingu Stadium Tokyo", official:"https://www.jinguhanabi.com/"
+  },
+  {
+    id:"sumida", cat:"festivals", name:"Sumida River Fireworks", jp:"隅田川花火大会",
+    tags:["you","solo"], time:"~30 MIN", dates:"25 Jul 2026 (Sat)",
+    blurb:"Tokyo's biggest fireworks — ~20,000 shells near Asakusa. Before the family arrives, so a solo evening.",
+    address:"Sumida River, Asakusa / Mukōjima", station:"Asakusa (Ginza / Asakusa lines)",
+    route:"Metro toward Asakusa, ~30 min. Live route below.",
+    hours:"~19:00–20:30.",
+    price:"Free from public riverbanks; riverside restaurants sell seats.",
+    reservation:"None for free viewing (arrive 2–3 h early); restaurants book out.",
+    tips:[
+      "~1 million spectators — go early, and stay 60–90 min after to let station crowds thin.",
+      "Two launch sites near Asakusa, with Tokyo Skytree behind.",
+      "Great solo outing on your free Saturday before the family week."
+    ],
+    mapsDest:"Sumida River Fireworks Asakusa", official:"https://www.sumidagawa-hanabi.com/"
+  },
+
+  /* ---------------- FAMILY ---------------- */
+  {
+    id:"teamlab", cat:"family", name:"teamLab (Planets / Borderless)", jp:"チームラボ",
+    tags:["kids","family"], time:"~40 MIN",
+    blurb:"Immersive digital-art worlds the kids will love — walk through water, light and flowers.",
+    address:"Planets: Toyosu · Borderless: Azabudai Hills", station:"Shin-Toyosu (Yurikamome) / Azabudai (Hibiya)",
+    route:"~40 min via JR + Yurikamome or metro. Live route below.",
+    hours:"Roughly 09:00/10:00–21:00 (last entry earlier); varies.",
+    price:"Timed-entry tickets, roughly ¥3,800 adult (child cheaper).",
+    reservation:"Reserved timed-entry tickets required — book online well in advance.",
+    tips:[
+      "Planets: barefoot, you wade through water — bring/wear shorts or roll-up trousers.",
+      "Pick ONE (Planets or Borderless), not both in a day.",
+      "Very popular — weekend slots sell out; book as soon as dates are fixed."
+    ],
+    mapsDest:"teamLab Planets Toyosu Tokyo", official:"https://www.teamlab.art/"
+  },
+  {
+    id:"sunshinecity", cat:"family", name:"Sunshine City", jp:"サンシャインシティ",
+    tags:["kids","family"], time:"~3 MIN",
+    blurb:"A whole indoor city one stop away — sky aquarium, Namja Town, observation deck, Pokémon Center. Perfect hot/rainy day.",
+    address:"3-1 Higashi-Ikebukuro, Toshima", station:"JR Ikebukuro (1 stop) / Higashi-Ikebukuro",
+    route:"Yamanote 1 stop to Ikebukuro, ~8 min walk (or Higashi-Ikebukuro metro).",
+    hours:"Mall ~10:00–20:00; aquarium & attractions have their own hours.",
+    price:"Free to enter; aquarium ≈¥2,600 adult, other attractions ticketed separately.",
+    reservation:"None for the mall; some attractions timed.",
+    tips:[
+      "Sunshine Aquarium ('in the sky'), Namja Town indoor theme park, observation deck.",
+      "Pokémon Center Mega Tokyo + Pikachu Sweets for the 11-year-old.",
+      "Ideal escape from the August heat, and it's on your doorstep."
+    ],
+    mapsDest:"Sunshine City Ikebukuro", official:"https://sunshinecity.jp/en/"
+  },
+  {
+    id:"ueno", cat:"family", name:"Ueno (zoo, museums, park)", jp:"上野",
+    tags:["kids","family"], time:"~13 MIN",
+    blurb:"Zoo, big museums, and swan boats on Shinobazu Pond — an easy direct-line family day.",
+    address:"Ueno Park, Taito", station:"JR Ueno (direct on the Yamanote)",
+    route:"Yamanote direct to Ueno, ~13 min.",
+    hours:"Park always open; zoo ~09:30–17:00 (closed Mon); museums ~09:30–17:00.",
+    price:"Park free; zoo ≈¥600 adult (under-12 free); museums vary.",
+    reservation:"Popular special exhibitions may need timed tickets.",
+    tips:[
+      "Ueno Zoo has giant pandas; Shinobazu Pond has pedal swan boats.",
+      "National Museum of Nature & Science is a hit with curious teens.",
+      "A mid-August Ueno Summer Festival (lanterns on the pond) may be on during your family week."
+    ],
+    mapsDest:"Ueno Park Tokyo", official:"https://www.gotokyo.org/en/destinations/eastern-tokyo/ueno/index.html"
+  },
+  {
+    id:"yokohama", cat:"family", name:"Yokohama Chinatown", jp:"横浜中華街",
+    tags:["wife","family"], time:"~50 MIN",
+    blurb:"Japan's biggest Chinatown — a familiar-but-different food day, and a nice change of pace for your wife.",
+    address:"Yamashitachō, Naka-ku, Yokohama", station:"Motomachi-Chūkagai (Minatomirai line)",
+    route:"JR/Tōyoko toward Yokohama → Minatomirai line to Motomachi-Chūkagai, ~50 min. Live route below.",
+    hours:"Restaurants & shops ~10:00/11:00–21:00+.",
+    price:"Free to wander; food from street snacks up.",
+    reservation:"Popular restaurants worth booking on weekends.",
+    tips:[
+      "Combine with the Minatomirai waterfront, Cup Noodles Museum or the harbour.",
+      "Kanteibyō temple and endless street food (nikuman, xiaolongbao).",
+      "An easy, relaxed day that plays to the family's tastes."
+    ],
+    mapsDest:"Yokohama Chinatown Motomachi-Chukagai", official:"https://www.chinatown.or.jp/"
+  },
+
+  /* ---------------- EXTRAS ---------------- */
+  {
+    id:"rikugien", cat:"extras", name:"Rikugien Garden", jp:"六義園",
+    tags:["you","family"], time:"~5 MIN",
+    blurb:"A classic strolling garden a couple of stops away — a calm reset close to home.",
+    address:"6 Chome Honkomagome, Bunkyō", station:"JR Komagome (1–2 stops from Ōtsuka)",
+    route:"Yamanote to Komagome, ~5 min, then a short walk.",
+    hours:"~09:00–17:00 (last entry 16:30).",
+    price:"≈¥300 adult.",
+    reservation:"None.",
+    tips:[
+      "One of Tokyo's finest Edo-era landscape gardens; teahouse for matcha.",
+      "Great low-key solo morning before a work shift."
+    ],
+    mapsDest:"Rikugien Garden Komagome Tokyo", official:"https://www.tokyo-park.or.jp/park/format/index030.html"
+  },
+  {
+    id:"jimbocho", cat:"extras", name:"Kanda-Jimbōchō book town", jp:"神保町",
+    tags:["you","solo"], time:"~20 MIN",
+    blurb:"The used-bookshop district — pairs perfectly with puzzle & game hunting, plus the Sugorokuya game shop.",
+    address:"Jimbōchō, Chiyoda", station:"Jimbōchō (Hanzōmon / Mita / Shinjuku lines)",
+    route:"Metro from Ikebukuro toward Jimbōchō, ~20 min. Live route below.",
+    hours:"Most shops ~10:00/11:00–18:00/19:00; many closed Sundays.",
+    price:"Free to browse.",
+    reservation:"None.",
+    tips:[
+      "Hundreds of second-hand bookshops; curry restaurants are a local institution.",
+      "Sugorokuya (board games) is nearby — a browsing paradise for you."
+    ],
+    mapsDest:"Jimbocho book town Tokyo", official:"https://jimbou.info/"
+  },
+  {
+    id:"sento", cat:"extras", name:"Sentō & onsen", jp:"銭湯・温泉",
+    tags:["you"], time:"~3 MIN",
+    blurb:"After the gym or a hot day, a bathhouse is a joy. Times Spa Resta is one stop away.",
+    address:"Times Spa Resta (Ikebukuro) / Thermae-Yu (Shinjuku)", station:"JR Ikebukuro (1 stop)",
+    route:"Times Spa Resta is 1 stop from Ōtsuka in Ikebukuro.",
+    hours:"Times Spa Resta ~10:30–next-day; varies.",
+    price:"≈¥2,500–3,000 with towels/lounge access.",
+    reservation:"None.",
+    tips:[
+      "Cover tattoos or check each facility's policy.",
+      "A great wind-down after a gym session or a sweaty festival evening.",
+      "Ōedo/onsen-style complexes make a fun family outing too."
+    ],
+    mapsDest:"Times Spa Resta Ikebukuro", official:"https://www.timesspa-resta.jp/"
+  },
+  {
+    id:"depachika", cat:"extras", name:"Depachika food halls", jp:"デパ地下",
+    tags:["you","family"], time:"~3 MIN",
+    blurb:"Department-store basement food halls — spectacular takeaway for the nights you head to work.",
+    address:"Under Seibu & Tobu, Ikebukuro Station", station:"JR Ikebukuro (1 stop)",
+    route:"Directly under the Ikebukuro department stores, 1 stop away.",
+    hours:"~10:00–20:00/21:00.",
+    price:"From a few hundred yen; discounts appear near closing.",
+    reservation:"None.",
+    tips:[
+      "Bento, sushi, side dishes, desserts — grab dinner on the way to a shift.",
+      "Best deals in the last hour before closing."
+    ],
+    mapsDest:"Seibu Ikebukuro depachika food hall", official:""
+  },
+];
+
+/* =========================================================================
+   ROUTER + RENDER
+   ========================================================================= */
+const app = document.getElementById('app');
+const navEl = document.getElementById('nav');
+const menuBtn = document.getElementById('menuBtn');
+
+function mapsUrl(dest){
+  return "https://www.google.com/maps/dir/?api=1&origin="+encodeURIComponent(HOME_STATION)+
+         "&destination="+encodeURIComponent(dest)+"&travelmode=transit";
+}
+function tagEl(t){ return `<span class="tag ${t}">${T[t]||t}</span>`; }
+function esc(s){ return (s||"").replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+function buildNav(active){
+  const links = [`<a href="#/" class="${active==='home'?'on':''}">Home</a>`]
+    .concat(CATEGORIES.map(c=>`<a href="#/c/${c.id}" class="${active===c.id?'on':''}">${c.name.split(' ')[0].replace('·','')}</a>`))
+    .concat([`<a href="#/about" class="${active==='about'?'on':''}">Update</a>`]);
+  navEl.innerHTML = links.join('');
+}
+
+function renderHome(){
+  buildNav('home');
+  const boardRows = [
+    ["03","Ikebukuro","cat cafés · games · anime · gym"],
+    ["13","Ueno","zoo · museums · swan boats"],
+    ["24","Akihabara","puzzles · retro arcades"],
+    ["35","Fukagawa","水かけ matsuri · 14–16 Aug"],
+    ["day","Hakone","onsen · karakuri boxes"],
+  ].map(r=>`<div class="row"><span class="rt">${r[0]==='day'?'DAY':r[0]+' min'}</span><span class="rc">→ ${r[1]}</span><span class="rd">${r[2]}</span></div>`).join('');
+
+  const cats = CATEGORIES.map(c=>{
+    const n = PLACES.filter(p=>p.cat===c.id).length;
+    return `<a class="cat" href="#/c/${c.id}">
+      <span class="kanji">${c.kanji}</span>
+      <h3>${c.name}</h3>
+      <p>${c.blurb}</p>
+      <span class="count">${n} ${n===1?'place':'places'} →</span>
+    </a>`;
+  }).join('');
+
+  app.innerHTML = `
+    <section class="hero fade">
+      <div class="hero-in">
+        <p class="eyebrow">Family field guide · 大塚発</p>
+        <h1>Our month in Tokyo<span class="jp">大塚を拠点に — based at Ōtsuka</span></h1>
+        <p class="lead">Everything below is measured as a trip from Ōtsuka Station. Dad works evenings (5 pm–midnight), so mornings & afternoons are free to explore; the family joins for 6–15 August. Tap any place for the full logistics — trains, hours, prices, bookings.</p>
+        <div class="board" role="img" aria-label="Departures from Otsuka">
+          <div class="row" style="border-bottom:1px solid rgba(199,154,70,.4)"><span class="rt" style="color:var(--gold)">DEP</span><span class="rc" style="color:var(--board-text)">大塚 ŌTSUKA</span><span class="rd" style="color:#8EA0C8">bound for…</span></div>
+          ${boardRows}
+        </div>
+        <div class="chips">
+          <a class="chip" href="#/c/festivals">祭 Festivals calendar</a>
+          <a class="chip" href="#/c/cats">猫 Cat cafés</a>
+          <a class="chip" href="#/c/family">家族 Family week</a>
+          <a class="chip" href="#/about">✎ Keep it updated</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="sec-head"><span class="n">◆</span><h2>What do you want to do?</h2><span class="sub">${PLACES.length} places</span></div>
+    <div class="catgrid fade">${cats}</div>
+
+    <div class="sec-head" style="margin-top:40px"><span class="n">祭</span><h2>During your dates (18 Jul–15 Aug)</h2></div>
+    <div class="cardgrid fade">${PLACES.filter(p=>p.cat==='festivals').map(cardHTML).join('')}</div>
+  `;
+  window.scrollTo(0,0);
+}
+
+function cardHTML(p){
+  const tags = (p.tags||[]).slice(0,2).map(tagEl).join('');
+  return `<a class="card" href="#/p/${p.id}">
+    <div class="cbody">
+      <div class="ctop">
+        <div><h3>${esc(p.name)}</h3><div class="jp">${esc(p.jp||'')}</div></div>
+        ${p.time?`<span class="time-badge">${esc(p.time)}</span>`:''}
+      </div>
+      <p>${esc(p.blurb)}</p>
+      <div class="meta">${p.dates?`<span class="tag" style="border-color:var(--lantern);color:var(--lantern-dim)">${esc(p.dates)}</span>`:''}${tags}</div>
+    </div>
+  </a>`;
+}
+
+function renderCategory(id){
+  const c = CATEGORIES.find(x=>x.id===id);
+  if(!c){ return renderHome(); }
+  buildNav(id);
+  const items = PLACES.filter(p=>p.cat===id);
+  app.innerHTML = `
+    <a class="back" href="#/">← All categories</a>
+    <div class="sec-head" style="margin-top:14px"><span class="n">${c.kanji}</span><h2>${c.name}</h2><span class="sub">${items.length} places</span></div>
+    <p style="max-width:60ch;color:var(--muted);margin:-6px 0 18px;font-size:14px">${c.blurb}</p>
+    <div class="cardgrid fade">${items.map(cardHTML).join('') || '<div class="empty">Nothing here yet.</div>'}</div>
+  `;
+  window.scrollTo(0,0);
+}
+
+function specLine(k,v){ return v && v!=='—' ? `<div class="line"><div class="k">${k}</div><div class="v">${v}</div></div>` : ''; }
+
+function renderPlace(id){
+  const p = PLACES.find(x=>x.id===id);
+  if(!p){ return renderHome(); }
+  const c = CATEGORIES.find(x=>x.id===p.cat);
+  buildNav(p.cat);
+  const tips = (p.tips&&p.tips.length)? `<ul>${p.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>` : '';
+  const tagline = (p.tags||[]).map(tagEl).join('');
+  const related = PLACES.filter(x=>x.cat===p.cat && x.id!==p.id).slice(0,3);
+
+  app.innerHTML = `
+    <a class="back" href="#/c/${p.cat}">← ${c?c.name:'Back'}</a>
+    <section class="detail-hero fade">
+      <div class="dh-in">
+        <div class="dh-cat">${c?c.name:''}${p.dates?' · '+esc(p.dates):''}</div>
+        <h1>${esc(p.name)}</h1>
+        <div class="dh-jp">${esc(p.jp||'')}</div>
+        <div class="depart" role="img" aria-label="Route from Otsuka">
+          <div class="from"><div class="lbl">From</div><div class="st">大塚 Ōtsuka</div></div>
+          <div class="arrow">→<small>${esc(p.time||'')}</small></div>
+          <div class="to" style="text-align:right"><div class="lbl">To</div><div class="st">${esc(p.station||p.name)}</div></div>
+        </div>
+        <div class="dh-tags">${tagline}</div>
+      </div>
+    </section>
+
+    <p style="max-width:64ch;font-size:15px;margin:0 0 16px">${esc(p.blurb)}</p>
+
+    <div class="spec fade">
+      ${specLine('Getting there', esc(p.route))}
+      ${specLine('Address', esc(p.address))}
+      ${specLine('Nearest station', esc(p.station))}
+      ${specLine('Hours', esc(p.hours))}
+      ${specLine('Price', esc(p.price))}
+      ${specLine('Reservations', esc(p.reservation))}
+      ${tips?`<div class="line"><div class="k">Good to know</div><div class="v">${tips}</div></div>`:''}
+    </div>
+
+    ${p.confirm?`<div class="confirm"><span class="i">⚑</span><div><b>Confirm before you go.</b> ${esc(p.confirm)}</div></div>`:''}
+
+    <div class="actions">
+      ${p.mapsDest?`<a class="btn map" href="${mapsUrl(p.mapsDest)}" target="_blank" rel="noopener">▷ Route from Ōtsuka (live trains)</a>`:''}
+      ${p.official?`<a class="btn site" href="${esc(p.official)}" target="_blank" rel="noopener">◎ Official site — hours & prices</a>`:''}
+    </div>
+
+    ${related.length?`<div class="related">
+      <div class="sec-head"><span class="n">${c.kanji}</span><h2>More in ${c.name}</h2></div>
+      <div class="cardgrid">${related.map(cardHTML).join('')}</div>
+    </div>`:''}
+  `;
+  window.scrollTo(0,0);
+}
+
+function renderAbout(){
+  buildNav('about');
+  app.innerHTML = `
+    <a class="back" href="#/">← Home</a>
+    <div class="sec-head" style="margin-top:14px"><span class="n">✎</span><h2>Keep this site updated &amp; make it public</h2></div>
+    <div class="prose fade">
+      <h3>How the guide is built</h3>
+      <p>This whole site is a single file, <code>index.html</code>. Every recommendation is one entry in a list called <code>PLACES</code> near the top of the file's script. To change hours, a price, or add a new place, edit that list — no coding beyond copy-paste required. Each entry has plain fields: <code>name</code>, <code>hours</code>, <code>price</code>, <code>reservation</code>, <code>route</code>, <code>tips</code>, <code>official</code>, and so on.</p>
+
+      <h3>Make it public (free, ~2 minutes)</h3>
+      <ol class="steps">
+        <li><b>Easiest — Netlify Drop.</b> Go to <code>app.netlify.com/drop</code> and drag this <code>index.html</code> onto the page. You get a public link instantly to share with the family. To update later, drag the new file on again.</li>
+        <li><b>GitHub Pages.</b> Create a free repo, upload <code>index.html</code>, then in Settings → Pages choose the main branch. Your site appears at <code>yourname.github.io/repo</code>. Good if you want a permanent address.</li>
+        <li><b>Cloudflare Pages / Vercel.</b> Same idea — connect a folder or repo and it hosts the single file publicly.</li>
+      </ol>
+      <p>Because it's one self-contained file (fonts load from Google, maps open in Google Maps), it works anywhere with no build step and no server.</p>
+
+      <h3>Keeping the info accurate</h3>
+      <p>Opening times, prices and festival schedules for summer 2026 can shift, so each page links straight to the official site and to <b>live Google Maps routing from Ōtsuka</b> — those two buttons stay current even if a number here goes stale. Fields I couldn't verify are marked "confirm on official site" on purpose rather than guessed.</p>
+
+      <h3>Want me to make changes?</h3>
+      <p>Just tell me what changed — new opening hours, a place to add or drop, a firmed-up festival date, or a day-by-day itinerary for the family week — and I'll regenerate the file for you to re-upload.</p>
+    </div>
+  `;
+  window.scrollTo(0,0);
+}
+
+function route(){
+  const h = location.hash.replace(/^#\/?/,'');
+  navEl.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false');
+  if(h===''||h==='/'){ return renderHome(); }
+  const parts = h.split('/');
+  if(parts[0]==='c'){ return renderCategory(parts[1]); }
+  if(parts[0]==='p'){ return renderPlace(parts[1]); }
+  if(parts[0]==='about'){ return renderAbout(); }
+  return renderHome();
+}
+
+menuBtn.addEventListener('click',()=>{
+  const open = navEl.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', open?'true':'false');
+});
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>
