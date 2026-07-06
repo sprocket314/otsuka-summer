@@ -289,6 +289,9 @@
     border-radius:8px;font:inherit;font-size:14px;background:var(--paper);color:var(--ink)}
   .modal-row{display:flex;gap:10px}
   .modal-row label{flex:1}
+  .modal-warn{font-size:12.5px;line-height:1.5;color:#8a2b1f;background:rgba(200,64,46,.1);
+    border:1px solid rgba(200,64,46,.38);border-radius:8px;padding:10px 12px;margin:0 0 15px}
+  .modal-warn b{color:var(--lantern-dim)}
   .modal-hint{font-size:12px;color:var(--muted);margin:-4px 0 10px}
   .modal-note{font-size:12.5px;line-height:1.5;color:var(--lantern-dim);background:rgba(200,64,46,.07);
     border:1px solid rgba(200,64,46,.22);border-radius:8px;padding:9px 11px;margin:4px 0 15px}
@@ -943,6 +946,7 @@ function openCalModal(pid){
     <div class="modal" role="dialog" aria-modal="true" aria-label="Add to calendar">
       <button class="modal-x" aria-label="Close">×</button>
       <div class="modal-h"><span class="kj">暦</span><h3>Add to calendar</h3></div>
+      <div class="modal-warn">⚠️ On Google's screen, switch the calendar from <b>your name</b> to <b>“${esc(CAL_NAME)}”</b> before you press <b>Save</b> — otherwise it lands on your personal calendar, not the shared one.</div>
       <label>Event<input id="cm-title" type="text" value="${escAttr(p.name)}"></label>
       <label>Date<input id="cm-date" type="date" value="${d0}"></label>
       <div class="modal-row">
@@ -950,7 +954,7 @@ function openCalModal(pid){
         <label>End<input id="cm-end" type="time" value="${et0}"></label>
       </div>
       ${p.dates?`<div class="modal-hint">Guide dates: <b>${esc(p.dates)}</b></div>`:''}
-      <div class="modal-note">Opens Google Calendar — choose the <b>“${esc(CAL_NAME)}”</b> calendar and hit <b>Save</b> so the whole family sees it. (Times are Tokyo / ${CAL_TZ}.)</div>
+      <div class="modal-note">Times are Tokyo (${CAL_TZ}). Want a foolproof route instead? <b>Download .ics</b>, then in Google Calendar → Import, choose “${esc(CAL_NAME)}” as the target.</div>
       <div class="modal-actions">
         <a id="cm-g" class="btn map" target="_blank" rel="noopener">▷ Add to Google Calendar</a>
         <button id="cm-ics" class="btn site" type="button">⤓ Download .ics</button>
