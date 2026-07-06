@@ -873,12 +873,12 @@ function tagEl(t){ return `<span class="tag ${t}">${T[t]||t}</span>`; }
 function esc(s){ return (s||"").replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
 
 function buildNav(active){
+  const navLabel = c => c.id==='base' ? 'Base' : c.name.split(' ')[0].replace('·','');
   const links = [`<a href="#/" class="${active==='home'?'on':''}">Home</a>`]
-    .concat(CATEGORIES.map(c=>`<a href="#/c/${c.id}" class="${active===c.id?'on':''}">${c.name.split(' ')[0].replace('·','')}</a>`))
+    .concat(CATEGORIES.map(c=>`<a href="#/c/${c.id}" class="${active===c.id?'on':''}">${navLabel(c)}</a>`))
     .concat([
       `<a href="#/eat" class="${active==='eat'?'on':''}">食 Eat</a>`,
-      `<a href="#/map" class="${active==='map'?'on':''}">地図 Map</a>`,
-      `<a href="#/about" class="${active==='about'?'on':''}">Update</a>`
+      `<a href="#/map" class="${active==='map'?'on':''}">地図 Map</a>`
     ]);
   navEl.innerHTML = links.join('');
 }
