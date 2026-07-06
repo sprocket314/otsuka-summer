@@ -258,6 +258,42 @@
   .kml p{margin:0 0 8px;font-size:13.5px;color:#3a4256}
   .kml ol{margin:6px 0 0;padding-left:20px;font-size:13.5px}
   .kml code{font-family:"Space Mono",monospace;background:var(--paper);padding:2px 6px;border-radius:5px;font-size:12px}
+
+  /* ---------- add-to-calendar ---------- */
+  .cfoot{margin-top:9px}
+  .cal-btn{font:inherit;cursor:pointer}
+  .cal-btn.chip{font-family:"Space Mono",monospace;font-size:11px;letter-spacing:.03em;
+    background:rgba(200,64,46,.07);border:1px solid rgba(200,64,46,.28);color:var(--lantern-dim);
+    padding:5px 11px;border-radius:999px}
+  .cal-btn.chip:hover{background:rgba(200,64,46,.14);border-color:var(--lantern)}
+  .btn.cal{background:var(--ink);color:var(--board-text)}
+  .btn.cal:hover{filter:brightness(1.12)}
+  .cal-quick{display:flex;flex-direction:column;gap:8px}
+  .cal-quick .qbtn{text-align:left;background:var(--paper);border:1px solid var(--line);border-radius:10px;
+    padding:11px 13px;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
+  .cal-quick .qbtn span{font-family:"Space Mono",monospace;font-weight:400;font-size:11.5px;color:var(--lantern-dim)}
+  .cal-quick .qbtn:hover{border-color:var(--line-strong);background:#fff}
+
+  .modal-back{position:fixed;inset:0;background:rgba(17,24,48,.55);z-index:100;display:flex;
+    align-items:center;justify-content:center;padding:18px}
+  .modal{background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r);
+    max-width:440px;width:100%;padding:20px 20px 18px;box-shadow:var(--shadow);position:relative}
+  .modal-x{position:absolute;top:8px;right:12px;background:none;border:0;font-size:24px;color:var(--muted);
+    cursor:pointer;line-height:1}
+  .modal-h{display:flex;align-items:baseline;gap:9px;margin:0 0 14px}
+  .modal-h .kj{color:var(--lantern);font-family:"Zen Old Mincho",serif;font-size:19px}
+  .modal-h h3{margin:0;font-family:"Zen Old Mincho",serif;font-size:18px}
+  .modal label{display:block;font-family:"Space Mono",monospace;font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:11px}
+  .modal input{display:block;width:100%;margin-top:5px;padding:9px 10px;border:1px solid var(--line-strong);
+    border-radius:8px;font:inherit;font-size:14px;background:var(--paper);color:var(--ink)}
+  .modal-row{display:flex;gap:10px}
+  .modal-row label{flex:1}
+  .modal-hint{font-size:12px;color:var(--muted);margin:-4px 0 10px}
+  .modal-note{font-size:12.5px;line-height:1.5;color:var(--lantern-dim);background:rgba(200,64,46,.07);
+    border:1px solid rgba(200,64,46,.22);border-radius:8px;padding:9px 11px;margin:4px 0 15px}
+  .modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .modal-actions .btn{cursor:pointer}
 </style>
 </head>
 <body>
@@ -859,6 +895,89 @@ function rMapsRoute(r){ return "https://www.google.com/maps/dir/?api=1&origin="+
 function stars(n){ return '<span class="star">★'+n.toFixed(1)+'</span>'; }
 
 /* =========================================================================
+   SHARED CALENDAR  —  family Google Calendar "Ōtsuka Summer 2026".
+   Change CAL_ID to point the site at a different calendar.
+   ========================================================================= */
+const CAL_ID = "d3ee878491e3ee19bf2b4c03ddae6077a6949573b958cdb6c2a1de19ea161e77@group.calendar.google.com";
+const CAL_NAME = "Ōtsuka Summer 2026";
+const CAL_TZ = "Asia/Tokyo";
+const CAL_EMBED = "https://calendar.google.com/calendar/embed?src="+encodeURIComponent(CAL_ID)+
+  "&ctz="+encodeURIComponent(CAL_TZ)+"&mode=MONTH&dates=20260701/20260731&wkst=2&hl=en&showTitle=0&showPrint=0&showTz=1";
+
+const CAL_MONTHS = {jan:0,feb:1,mar:2,apr:3,may:4,jun:5,jul:6,aug:7,sep:8,oct:9,nov:10,dec:11};
+// best-effort default date from a "14–16 Aug 2026"-style string; falls back to mid family-week
+function guessDate(p){
+  const m = ((p.dates||'')+'').match(/(\d{1,2})\s*[–-]?\s*\d*\s*([A-Za-z]{3})[a-z]*\.?\s*(\d{4})?/);
+  if(m && CAL_MONTHS[m[2].toLowerCase()]!=null){
+    const mo=CAL_MONTHS[m[2].toLowerCase()], y=m[3]?+m[3]:2026;
+    return `${y}-${String(mo+1).padStart(2,'0')}-${String(+m[1]).padStart(2,'0')}`;
+  }
+  return "2026-08-08";
+}
+function defaultTimes(p){ return p.cat==='festivals' ? ["19:00","21:00"] : ["10:00","12:00"]; }
+function calLoc(p){ return p.address || p.mapsDest || p.name; }
+function calStamp(dateStr,timeStr){ return dateStr.replace(/-/g,'')+"T"+timeStr.replace(':','')+"00"; }
+function gcalUrl(title,d,st,et,details,loc){
+  const q = new URLSearchParams({action:"TEMPLATE", text:title,
+    dates:calStamp(d,st)+"/"+calStamp(d,et), details, location:loc, ctz:CAL_TZ});
+  return "https://calendar.google.com/calendar/render?"+q.toString();
+}
+function icsText(title,d,st,et,details,loc){
+  const e = s=>(s||'').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+  const stamp = new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Otsuka Summer//guide//EN","CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT","UID:otsuka-"+calStamp(d,st)+"@otsuka-summer","DTSTAMP:"+stamp,
+    "DTSTART;TZID="+CAL_TZ+":"+calStamp(d,st),"DTEND;TZID="+CAL_TZ+":"+calStamp(d,et),
+    "SUMMARY:"+e(title),"DESCRIPTION:"+e(details),"LOCATION:"+e(loc),
+    "END:VEVENT","END:VCALENDAR"].join("\r\n");
+}
+function escAttr(s){ return esc(s).replace(/"/g,'&quot;'); }
+
+// "Add to calendar" dialog: pick date + time, then Google Calendar link or .ics
+function openCalModal(pid){
+  const p = PLACES.find(x=>x.id===pid); if(!p) return;
+  const d0=guessDate(p), [st0,et0]=defaultTimes(p);
+  const details = `${p.blurb||''}\n\nFrom the Ōtsuka Summer guide: https://sprocket314.github.io/otsuka-summer/#/p/${p.id}`;
+  const wrap=document.createElement('div'); wrap.className='modal-back';
+  wrap.innerHTML=`
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Add to calendar">
+      <button class="modal-x" aria-label="Close">×</button>
+      <div class="modal-h"><span class="kj">暦</span><h3>Add to calendar</h3></div>
+      <label>Event<input id="cm-title" type="text" value="${escAttr(p.name)}"></label>
+      <label>Date<input id="cm-date" type="date" value="${d0}"></label>
+      <div class="modal-row">
+        <label>Start<input id="cm-start" type="time" value="${st0}"></label>
+        <label>End<input id="cm-end" type="time" value="${et0}"></label>
+      </div>
+      ${p.dates?`<div class="modal-hint">Guide dates: <b>${esc(p.dates)}</b></div>`:''}
+      <div class="modal-note">Opens Google Calendar — choose the <b>“${esc(CAL_NAME)}”</b> calendar and hit <b>Save</b> so the whole family sees it. (Times are Tokyo / ${CAL_TZ}.)</div>
+      <div class="modal-actions">
+        <a id="cm-g" class="btn map" target="_blank" rel="noopener">▷ Add to Google Calendar</a>
+        <button id="cm-ics" class="btn site" type="button">⤓ Download .ics</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+  const $=s=>wrap.querySelector(s);
+  const vals=()=>[$('#cm-title').value||p.name,$('#cm-date').value,$('#cm-start').value,$('#cm-end').value];
+  function refresh(){ const [t,d,s,e]=vals(); $('#cm-g').href=gcalUrl(t,d,s,e,details,calLoc(p)); }
+  ['#cm-title','#cm-date','#cm-start','#cm-end'].forEach(s=>$(s).addEventListener('input',refresh));
+  refresh();
+  $('#cm-ics').addEventListener('click',()=>{
+    const [t,d,s,e]=vals();
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([icsText(t,d,s,e,details,calLoc(p))],{type:'text/calendar'}));
+    a.download=(p.id||'event')+'.ics'; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+  });
+  const close=()=>{ wrap.remove(); document.removeEventListener('keydown',onKey); };
+  function onKey(e){ if(e.key==='Escape') close(); }
+  $('.modal-x').addEventListener('click',close);
+  wrap.addEventListener('click',e=>{ if(e.target===wrap) close(); });
+  document.addEventListener('keydown',onKey);
+  $('#cm-title').focus();
+}
+
+/* =========================================================================
    ROUTER + RENDER
    ========================================================================= */
 const app = document.getElementById('app');
@@ -878,7 +997,8 @@ function buildNav(active){
     .concat(CATEGORIES.map(c=>`<a href="#/c/${c.id}" class="${active===c.id?'on':''}">${navLabel(c)}</a>`))
     .concat([
       `<a href="#/eat" class="${active==='eat'?'on':''}">食 Eat</a>`,
-      `<a href="#/map" class="${active==='map'?'on':''}">地図 Map</a>`
+      `<a href="#/map" class="${active==='map'?'on':''}">地図 Map</a>`,
+      `<a href="#/calendar" class="${active==='calendar'?'on':''}">暦 Cal</a>`
     ]);
   navEl.innerHTML = links.join('');
 }
@@ -916,7 +1036,7 @@ function renderHome(){
         <div class="chips">
           <a class="chip" href="#/map">🗺 Map of everything</a>
           <a class="chip" href="#/eat">🍜 Rodrigo's food picks</a>
-          <a class="chip" href="#/c/festivals">祭 Festivals calendar</a>
+          <a class="chip" href="#/calendar">📅 Shared calendar</a>
           <a class="chip" href="#/c/cats">猫 Cat cafés</a>
           <a class="chip" href="#/c/family">家族 Family week</a>
         </div>
@@ -930,6 +1050,7 @@ function renderHome(){
     <div class="catgrid fade">
       <a class="cat" href="#/map"><span class="kanji">地図</span><h3>Map of everything</h3><p>Every activity plus Rodrigo's food picks on one interactive map — with a Google My Maps export.</p><span class="count">open the map →</span></a>
       <a class="cat" href="#/eat"><span class="kanji">食</span><h3>Rodrigo's food picks</h3><p>His shared list of top places to eat, sorted by area — and matched to each activity as “eat nearby”.</p><span class="count">${RESTAURANTS.filter(r=>r.tokyo).length} places →</span></a>
+      <a class="cat" href="#/calendar"><span class="kanji">暦</span><h3>Shared calendar</h3><p>One family calendar everyone shares. Add any place with 📅 — pick a day &amp; time and it appears for all.</p><span class="count">plan together →</span></a>
     </div>
 
     <div class="sec-head" style="margin-top:40px"><span class="n">祭</span><h2>During your dates (18 Jul–15 Aug)</h2></div>
@@ -948,6 +1069,7 @@ function cardHTML(p){
       </div>
       <p>${esc(p.blurb)}</p>
       <div class="meta">${p.dates?`<span class="tag" style="border-color:var(--lantern);color:var(--lantern-dim)">${esc(p.dates)}</span>`:''}${tags}</div>
+      <div class="cfoot"><button class="cal-btn chip" data-place="${p.id}" type="button">📅 Add to calendar</button></div>
     </div>
   </a>`;
 }
@@ -1033,6 +1155,7 @@ function renderPlace(id){
     ${p.confirm?`<div class="confirm"><span class="i">⚑</span><div><b>Confirm before you go.</b> ${esc(p.confirm)}</div></div>`:''}
 
     <div class="actions">
+      <button class="btn cal cal-btn" data-place="${p.id}" type="button">📅 Add to calendar</button>
       ${p.mapsDest?`<a class="btn map" href="${mapsUrl(p.mapsDest)}" target="_blank" rel="noopener">▷ Route from Ōtsuka (live trains)</a>`:''}
       ${p.official?`<a class="btn site" href="${esc(p.official)}" target="_blank" rel="noopener">◎ Official site — hours & prices</a>`:''}
     </div>
@@ -1111,6 +1234,26 @@ function renderMap(){
   window.scrollTo(0,0);
 }
 
+// ---------- shared calendar page ----------
+function renderCalendar(){
+  buildNav('calendar');
+  const dated = PLACES.filter(p=>p.dates);
+  app.innerHTML = `
+    <a class="back" href="#/">← Home</a>
+    <div class="sec-head" style="margin-top:14px"><span class="n">暦</span><h2>Shared family calendar</h2><span class="sub">${esc(CAL_NAME)}</span></div>
+    <p style="max-width:64ch;color:var(--muted);margin:-6px 0 12px;font-size:14px">One calendar the whole family shares. Add anything from the guide with its <b>📅 Add to calendar</b> button — pick a day &amp; time and it drops in here for everyone. Below are the fixed-date events for one-tap adding.</p>
+    <div class="mapwrap"><iframe title="${esc(CAL_NAME)} shared calendar" loading="lazy" src="${CAL_EMBED}"></iframe></div>
+    <div class="kml">
+      <h3>Fixed-date events — add in one tap</h3>
+      <div class="cal-quick">
+        ${dated.map(p=>`<button class="cal-btn qbtn" data-place="${p.id}" type="button">📅 ${esc(p.name)} <span>· ${esc(p.dates)}</span></button>`).join('')}
+      </div>
+      <p style="margin-top:14px;font-size:13px;color:var(--muted)">Calendar looks empty or asks for access? It has to be <b>shared publicly</b> and with the family first — that's a one-time step for the calendar's owner (see the update page).</p>
+    </div>
+  `;
+  window.scrollTo(0,0);
+}
+
 function renderAbout(){
   buildNav('about');
   app.innerHTML = `
@@ -1123,6 +1266,14 @@ function renderAbout(){
       <h3>Rodrigo's food picks, the “eat nearby” option &amp; the map</h3>
       <p>Rodrigo Fernández's shared Google list <i>«Sitios top en Japón»</i> lives in the script as <code>RESTAURANTS</code> (name, area, rating, price and coordinates). The <b><a href="#/eat" style="color:var(--lantern-dim)">Eat</a></b> page lists them by area; the <b><a href="#/map" style="color:var(--lantern-dim)">Map</a></b> plots them alongside every activity; and each activity page shows its closest few as an “Eat nearby” block (the <code>EAT</code> table holds the nearest matches, computed by straight-line distance). If Rodrigo adds places, re-run the small helper <code>_work/build.py</code> to regenerate <code>RESTAURANTS</code>, <code>EAT</code> and the <code>otsuka-map.kml</code> file — or just tell me and I'll do it.</p>
       <p>The <b><a href="#/map" style="color:var(--lantern-dim)">Map</a></b> page embeds our own <b>Google My Map</b> — things to do in red, Rodrigo's food in green. It's a public Google map you can open full-screen, get directions on, or copy to your own account to edit; the same pins are also downloadable as <code>otsuka-map.kml</code>. (To point the site at a different My Map, change <code>MYMAP_MID</code> in the script.)</p>
+
+      <h3>The shared calendar — two one-time steps</h3>
+      <p>The <b><a href="#/calendar" style="color:var(--lantern-dim)">Cal</a></b> page embeds a Google Calendar named <b>Ōtsuka Summer 2026</b>. Every place has an <b>📅 Add to calendar</b> button that opens Google with the date &amp; time pre-filled — pick that calendar and Save, and the whole family sees it. For it to work, the calendar's owner does this once in <b>Google Calendar → Settings → Ōtsuka Summer 2026</b>:</p>
+      <ol class="steps">
+        <li><b>Make the embed visible to everyone.</b> Under <i>Access permissions for events</i>, tick <b>Make available to public</b> and choose <b>See all event details</b>. (Without this, the calendar on the site shows empty / “needs access”.)</li>
+        <li><b>Let the family add events.</b> Under <i>Share with specific people or groups</i>, add each family member's Google email with permission <b>Make changes to events</b>. Then they can save events straight onto the shared calendar.</li>
+      </ol>
+      <p>To point the site at a different calendar, change <code>CAL_ID</code> in the script.</p>
 
       <h3>Make it public (free, ~2 minutes)</h3>
       <ol class="steps">
@@ -1151,6 +1302,7 @@ function route(){
   if(parts[0]==='p'){ return renderPlace(parts[1]); }
   if(parts[0]==='eat'){ return renderEat(); }
   if(parts[0]==='map'){ return renderMap(); }
+  if(parts[0]==='calendar'){ return renderCalendar(); }
   if(parts[0]==='about'){ return renderAbout(); }
   return renderHome();
 }
@@ -1158,6 +1310,11 @@ function route(){
 menuBtn.addEventListener('click',()=>{
   const open = navEl.classList.toggle('open');
   menuBtn.setAttribute('aria-expanded', open?'true':'false');
+});
+// "Add to calendar" buttons (inside cards, on detail pages, on the calendar page)
+document.addEventListener('click',e=>{
+  const b = e.target.closest('.cal-btn');
+  if(b){ e.preventDefault(); e.stopPropagation(); openCalModal(b.getAttribute('data-place')); }
 });
 window.addEventListener('hashchange', route);
 route();
