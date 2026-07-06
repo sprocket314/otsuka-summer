@@ -303,6 +303,34 @@
     border:1px solid rgba(200,64,46,.22);border-radius:8px;padding:9px 11px;margin:4px 0 15px}
   .modal-actions{display:flex;gap:10px;flex-wrap:wrap}
   .modal-actions .btn{cursor:pointer}
+
+  /* ---------- illustrated cover art (generated) ---------- */
+  .cover{position:relative;height:104px;overflow:hidden;display:grid;place-items:center;
+    border-bottom:1.5px solid var(--gold);background:linear-gradient(135deg,#26355f,#151d38)}
+  .cover::before{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1.7px);background-size:13px 13px;opacity:.5}
+  .cover::after{content:"";position:absolute;top:-40px;right:-34px;width:128px;height:128px;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%)}
+  .cov-kanji{position:relative;z-index:1;font-family:"Zen Old Mincho",serif;font-weight:900;
+    color:rgba(255,255,255,.94);font-size:46px;letter-spacing:.06em;line-height:1;text-shadow:0 3px 16px rgba(0,0,0,.3)}
+  .cov-em{position:absolute;top:9px;left:12px;z-index:1;font-size:19px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  .cov-base{background:linear-gradient(135deg,#26355f,#151d38)}
+  .cov-puzzles{background:linear-gradient(135deg,#2f6d5f,#1e463d)}
+  .cov-games{background:linear-gradient(135deg,#574b8a,#332c58)}
+  .cov-go{background:linear-gradient(135deg,#3b4a63,#212b43)}
+  .cov-anime{background:linear-gradient(135deg,#a13a68,#6a2848)}
+  .cov-cats{background:linear-gradient(135deg,#c0733a,#8a4f20)}
+  .cov-festivals{background:linear-gradient(135deg,#c8402e,#8c2b20)}
+  .cov-family{background:linear-gradient(135deg,#b58a2c,#7c5f1a)}
+  .cov-extras{background:linear-gradient(135deg,#4a7a5a,#2b5d44)}
+  /* restaurant covers — coloured by cuisine */
+  .rcard{overflow:hidden}
+  .rcover{position:relative;height:64px;margin:-13px -15px 11px;overflow:hidden;display:grid;place-items:center;
+    border-bottom:1.5px solid var(--gold);
+    background:linear-gradient(135deg,rgba(255,255,255,.13),rgba(0,0,0,.34)),var(--cc,#6a5a4a)}
+  .rcover::before{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.15) 1px,transparent 1.6px);background-size:12px 12px;opacity:.5}
+  .rcover-em{position:relative;z-index:1;font-size:29px;filter:drop-shadow(0 2px 5px rgba(0,0,0,.32))}
 </style>
 </head>
 <body>
@@ -1071,9 +1099,42 @@ function renderHome(){
   window.scrollTo(0,0);
 }
 
+// ---- illustrated cover art (generated, self-contained: colour + kanji + icon) ----
+const COV_EMOJI={base:"🏠",puzzles:"🧩",games:"🎲",go:"⚫",anime:"🎌",cats:"🐱",festivals:"🏮",family:"👪",extras:"🍵"};
+function coverKanji(p){
+  const jp=(p.jp||'').replace(/\s+/g,'');
+  const cj=jp.match(/[぀-ヿ㐀-鿿豈-﫿]/g);
+  if(cj&&cj.length) return cj.slice(0,2).join('');
+  const c=CATEGORIES.find(x=>x.id===p.cat); return c?c.kanji:'旅';
+}
+function coverHTML(p){
+  return `<div class="cover cov-${esc(p.cat)}" aria-hidden="true">
+    <span class="cov-em">${COV_EMOJI[p.cat]||'🎌'}</span>
+    <span class="cov-kanji">${esc(coverKanji(p))}</span>
+  </div>`;
+}
+// restaurants — cover keyed to cuisine
+const CUISINE=[
+  [/sushi/i,"🍣","#31577f"],[/ramen|tsukemen|soba|noodle/i,"🍜","#a85a2a"],
+  [/izakaya|sake/i,"🍶","#7f3a48"],[/pizza/i,"🍕","#a5382b"],
+  [/tonkatsu|katsu/i,"🍱","#9c6528"],[/burger|hamburger/i,"🍔","#84552a"],
+  [/taco|mexican/i,"🌮","#3a8058"],[/yakiniku|yakitori|wagyu|beef/i,"🍖","#822c28"],
+  [/tempura/i,"🍤","#9c742c"],[/coffee|caf|pancake|patisserie|bakery|garden/i,"☕","#6f5236"],
+  [/spanish|paella|tapas/i,"🥘","#a8492a"],[/italian/i,"🍝","#547031"],
+  [/thai/i,"🍲","#3a8065"],[/indian/i,"🍛","#a86c2a"],
+  [/chinese|taiwanese|dim sum/i,"🥟","#933838"],[/microbrewery|craft beer|american/i,"🍺","#846327"],
+  [/peruvian|singaporean|okonomiyaki|donburi|seafood/i,"🍲","#6f5286"],
+];
+function cuisineCover(r){ for(const [re,em,col] of CUISINE) if(re.test(r.category)) return {em,col}; return {em:"🍽️",col:"#6a5a4a"}; }
+function rcoverHTML(r){
+  const {em,col}=cuisineCover(r);
+  return `<div class="rcover" style="--cc:${col}" aria-hidden="true"><span class="rcover-em">${em}</span></div>`;
+}
+
 function cardHTML(p){
   const tags = (p.tags||[]).slice(0,2).map(tagEl).join('');
   return `<a class="card" href="#/p/${p.id}">
+    ${coverHTML(p)}
     <div class="cbody">
       <div class="ctop">
         <div><h3>${esc(p.name)}</h3><div class="jp">${esc(p.jp||'')}</div></div>
@@ -1193,6 +1254,7 @@ const ZONES = [
 ];
 function rcardHTML(r){
   return `<a class="rcard" href="${rMapsSearch(r)}" target="_blank" rel="noopener">
+    ${rcoverHTML(r)}
     <div class="rt"><h4>${esc(r.name)}</h4><span class="a">${esc(r.area)}</span></div>
     <div class="c">${esc(r.category)}</div>
     <div class="m">${stars(r.rating)}<span>(${r.reviews.toLocaleString()})</span>${r.price?'<span>· '+esc(r.price)+'</span>':''}<span style="margin-left:auto">📷 Photos ↗</span></div>
