@@ -37,6 +37,17 @@
 <Placemark styleUrl="#act"><name>Kanda-Jimbōchō book town</name><Point><coordinates>139.7576272,35.6959319,0</coordinates></Point></Placemark>
 <Placemark styleUrl="#act"><name>Sentō &amp; onsen</name><Point><coordinates>139.7173039,35.7289193,0</coordinates></Point></Placemark>
 <Placemark styleUrl="#act"><name>Depachika food halls</name><Point><coordinates>139.7118073,35.7287031,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Tamago-ken (Dōgenzaka)</name><Point><coordinates>139.6969124,35.6601749,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Tamago-ken (Shibuya)</name><Point><coordinates>139.699354,35.66023,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Takeshita Street (Harajuku)</name><Point><coordinates>139.7051821,35.6710335,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Akihabara Radio Kaikan</name><Point><coordinates>139.7719571,35.6979149,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Yodobashi Akiba</name><Point><coordinates>139.774798,35.698917,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Tokyo Fire Dept — Disaster Prevention Center</name><Point><coordinates>139.7616013,35.6888195,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>LUMINE Shinjuku</name><Point><coordinates>139.699147,35.6892039,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Asakusa Sumo Club</name><Point><coordinates>139.7932306,35.7141548,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Gōtoku-ji (cat temple)</name><Point><coordinates>139.647481,35.6488124,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>HARRY Asakusa (animal café)</name><Point><coordinates>139.7976072,35.7111133,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Takagi Shrine</name><Point><coordinates>139.8152165,35.7147691,0</coordinates></Point></Placemark>
 </Folder>
 <Folder><name>Rodrigo's food picks</name>
 <Placemark styleUrl="#food"><name>pâtisserie ondine</name><description>Patisserie · Azabu · ★4.4 (37)</description><Point><coordinates>139.7439393,35.6560992,0</coordinates></Point></Placemark>
