@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;600;700;900&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   :root{
     --ink:#111830;          /* deep indigo night */
@@ -245,14 +246,19 @@
     gap:8px;flex-wrap:wrap;align-items:center}
   .rcard .m .star{color:var(--gold)}
 
-  /* ---------- map (embedded Google My Map) ---------- */
+  /* ---------- map ---------- */
   .mapwrap{width:100%;height:min(72vh,600px);border-radius:var(--r);overflow:hidden;
     border:1px solid var(--line-strong);background:#dfe3e8}
   .mapwrap iframe{width:100%;height:100%;border:0;display:block}
+  #map{height:min(70vh,580px);width:100%;border-radius:var(--r);border:1px solid var(--line-strong);z-index:0;
+    background:#dfe3e8}
   .legend{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 4px;font-family:"Space Mono",monospace;
     font-size:12px;color:var(--muted)}
   .legend .d{width:12px;height:12px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;
     border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+  .leaflet-popup-content{font-family:"Zen Kaku Gothic New",sans-serif;font-size:13px;line-height:1.5;margin:12px 14px}
+  .leaflet-popup-content b{font-family:"Zen Old Mincho",serif;font-size:14px}
+  .leaflet-popup-content a{color:var(--lantern-dim);font-family:"Space Mono",monospace;font-size:12px}
   .kml{margin:16px 0 0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px}
   .kml h3{margin:0 0 8px;font-family:"Zen Old Mincho",serif;font-size:16px}
   .kml p{margin:0 0 8px;font-size:13.5px;color:#3a4256}
@@ -356,6 +362,7 @@
   Always confirm hours, prices &amp; festival dates on each official site before you go.
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
 /* =========================================================================
    DATA  —  edit here to keep the guide up to date.
@@ -1422,29 +1429,55 @@ function renderEat(){
 }
 
 // ---------- combined map (our Google My Map, embedded) ----------
-const MYMAP_MID = "1j-l2k_n2muFB5IZEUyjipy0LQPsnt6c";
+// ---------- combined map — built live from the guide's own data (auto-updates) ----------
 function renderMap(){
   buildNav('map');
-  const nAct = Object.values(ACT_COORDS).filter(Boolean).length;
-  const nFood = RESTAURANTS.filter(r=>r.tokyo&&r.coord).length;
+  const acts = PLACES.filter(p=>ACT_COORDS[p.id]);
+  const foods = RESTAURANTS.filter(r=>r.tokyo&&r.coord);
   app.innerHTML = `
     <a class="back" href="#/">← Home</a>
     <div class="sec-head" style="margin-top:14px"><span class="n">地図</span><h2>Everything on one map</h2><span class="sub">guide + food</span></div>
-    <p style="max-width:64ch;color:var(--muted);margin:-6px 0 12px;font-size:14px">Our own Google map: every place in this guide (<span style="color:var(--lantern)">red</span>) plus all of Rodrigo's food picks (<span style="color:var(--ok)">green</span>), around home base <span style="color:var(--gold)">Ōtsuka</span>. Use the panel on the left to toggle layers; tap any pin for details.</p>
-    <div class="mapwrap">
-      <iframe title="Ōtsuka Summer — Tokyo guide + Rodrigo's food (Google My Maps)" loading="lazy" src="https://www.google.com/maps/d/embed?mid=${MYMAP_MID}&ehbc=2E312F"></iframe>
-    </div>
+    <p style="max-width:64ch;color:var(--muted);margin:-6px 0 12px;font-size:14px">Every place in this guide (<span style="color:var(--lantern)">red</span>) plus all of Rodrigo's food picks (<span style="color:var(--ok)">green</span>), around home base <span style="color:var(--gold)">Ōtsuka</span>. This map draws itself from the guide — add a place and it appears here automatically. Tap a pin for details.</p>
+    <div id="map"></div>
     <div class="legend">
       <span><span class="d" style="background:#C79A46"></span>Ōtsuka (home)</span>
-      <span><span class="d" style="background:#C8402E"></span>Things to do (${nAct})</span>
-      <span><span class="d" style="background:#2E6E4E"></span>Rodrigo's food (${nFood})</span>
+      <span><span class="d" style="background:#C8402E"></span>Things to do (${acts.length})</span>
+      <span><span class="d" style="background:#2E6E4E"></span>Rodrigo's food (${foods.length})</span>
     </div>
     <div class="kml">
-      <h3>Open it full-screen or make it yours</h3>
-      <p><a href="https://www.google.com/maps/d/viewer?mid=${MYMAP_MID}" target="_blank" rel="noopener">Open the full Google map ↗</a> — search it, get directions, or (when signed in) copy it to your own account to edit. You can also <a href="otsuka-map.kml" download>download the raw pins as KML</a>.</p>
+      <h3>Take it with you</h3>
+      <p><a href="otsuka-map.kml" download>Download all pins (KML)</a> — import into Google My Maps, Apple Maps, or any map app for your own editable copy. (The KML is regenerated with the guide, so it stays current.)</p>
     </div>
   `;
   window.scrollTo(0,0);
+  if(typeof L === 'undefined'){
+    document.getElementById('map').innerHTML =
+      '<div style="padding:30px;text-align:center;color:#5B647A">The map needs an internet connection to load its tiles — the KML download below still works offline.</div>';
+    return;
+  }
+  const home = ACT_COORDS.otsuka;
+  const map = L.map('map',{scrollWheelZoom:false}).setView([35.70,139.75],11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
+    attribution:'&copy; OpenStreetMap'}).addTo(map);
+  const pts=[];
+  L.circleMarker(home,{radius:9,color:'#fff',weight:2,fillColor:'#C79A46',fillOpacity:1})
+    .addTo(map).bindPopup('<b>Ōtsuka</b><br>Your home base — everything is measured from here.');
+  pts.push(home);
+  acts.forEach(p=>{
+    const c = ACT_COORDS[p.id];
+    L.circleMarker(c,{radius:6,color:'#fff',weight:1.5,fillColor:'#C8402E',fillOpacity:.95})
+      .addTo(map)
+      .bindPopup(`<b>${esc(p.name)}</b><br>${esc((CATEGORIES.find(x=>x.id===p.cat)||{}).name||'')}${p.time?' · '+esc(p.time):''}<br><a href="#/p/${p.id}">Open guide page →</a>${p.mapsDest?` · <a href="${photosUrl(p.mapsDest)}" target="_blank" rel="noopener">Photos ↗</a>`:''}`);
+    pts.push(c);
+  });
+  foods.forEach(r=>{
+    L.circleMarker(r.coord,{radius:5,color:'#fff',weight:1.2,fillColor:'#2E6E4E',fillOpacity:.9})
+      .addTo(map)
+      .bindPopup(`<b>${esc(r.name)}</b><br>${esc(r.category)} · ${esc(r.area)}<br>★${r.rating.toFixed(1)} (${r.reviews.toLocaleString()})${r.price?' · '+esc(r.price):''}<br><a href="${rMapsSearch(r)}" target="_blank" rel="noopener">Open in Google Maps ↗</a>`);
+    pts.push(r.coord);
+  });
+  map.fitBounds(pts,{padding:[28,28]});
+  setTimeout(()=>map.invalidateSize(),120);
 }
 
 // ---------- shared calendar page ----------
@@ -1478,7 +1511,7 @@ function renderAbout(){
 
       <h3>Rodrigo's food picks, the “eat nearby” option &amp; the map</h3>
       <p>Rodrigo Fernández's shared Google list <i>«Sitios top en Japón»</i> lives in the script as <code>RESTAURANTS</code> (name, area, rating, price and coordinates). The <b><a href="#/eat" style="color:var(--lantern-dim)">Eat</a></b> page lists them by area; the <b><a href="#/map" style="color:var(--lantern-dim)">Map</a></b> plots them alongside every activity; and each activity page shows its closest few as an “Eat nearby” block (the <code>EAT</code> table holds the nearest matches, computed by straight-line distance). If Rodrigo adds places, re-run the small helper <code>_work/build.py</code> to regenerate <code>RESTAURANTS</code>, <code>EAT</code> and the <code>otsuka-map.kml</code> file — or just tell me and I'll do it.</p>
-      <p>The <b><a href="#/map" style="color:var(--lantern-dim)">Map</a></b> page embeds our own <b>Google My Map</b> — things to do in red, Rodrigo's food in green. It's a public Google map you can open full-screen, get directions on, or copy to your own account to edit; the same pins are also downloadable as <code>otsuka-map.kml</code>. (To point the site at a different My Map, change <code>MYMAP_MID</code> in the script.)</p>
+      <p>The <b><a href="#/map" style="color:var(--lantern-dim)">Map</a></b> page draws itself <b>live from the guide's own data</b> (Leaflet + OpenStreetMap) — things to do in red, Rodrigo's food in green, home in gold. Add a place to <code>PLACES</code> (with its coordinates in <code>ACT_COORDS</code>) and it appears on the map automatically on the next deploy — no Google My Maps re-imports. The same pins are always downloadable as <code>otsuka-map.kml</code> if you want a copy in Google My Maps or Apple Maps.</p>
 
       <h3>The shared calendar — two one-time steps</h3>
       <p>The <b><a href="#/calendar" style="color:var(--lantern-dim)">Cal</a></b> page embeds a Google Calendar named <b>Ōtsuka Summer 2026</b>. Every place has an <b>📅 Add to calendar</b> button that opens Google with the date &amp; time pre-filled — pick that calendar and Save, and the whole family sees it. For it to work, the calendar's owner does this once in <b>Google Calendar → Settings → Ōtsuka Summer 2026</b>:</p>
