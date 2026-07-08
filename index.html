@@ -1457,8 +1457,8 @@ function renderMap(){
   }
   const home = ACT_COORDS.otsuka;
   const map = L.map('map',{scrollWheelZoom:false}).setView([35.70,139.75],11);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,
-    attribution:'&copy; OpenStreetMap'}).addTo(map);
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{
+    maxZoom:19, attribution:'Tiles &copy; Esri'}).addTo(map);
   const pts=[];
   L.circleMarker(home,{radius:9,color:'#fff',weight:2,fillColor:'#C79A46',fillOpacity:1})
     .addTo(map).bindPopup('<b>Ōtsuka</b><br>Your home base — everything is measured from here.');
