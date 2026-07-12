@@ -49,6 +49,7 @@
 <Placemark styleUrl="#act"><name>HARRY Asakusa (animal café)</name><Point><coordinates>139.7976072,35.7111133,0</coordinates></Point></Placemark>
 <Placemark styleUrl="#act"><name>Takagi Shrine</name><Point><coordinates>139.8152165,35.7147691,0</coordinates></Point></Placemark>
 <Placemark styleUrl="#act"><name>Amuri Studio (board games)</name><Point><coordinates>139.7069933,35.7002939,0</coordinates></Point></Placemark>
+<Placemark styleUrl="#act"><name>Health check — Tokyo Midtown Clinic</name><Point><coordinates>139.7312888,35.6661201,0</coordinates></Point></Placemark>
 </Folder>
 <Folder><name>Rodrigo's food picks</name>
 <Placemark styleUrl="#food"><name>pâtisserie ondine</name><description>Patisserie · Azabu · ★4.4 (37)</description><Point><coordinates>139.7439393,35.6560992,0</coordinates></Point></Placemark>
